@@ -52,7 +52,7 @@ def get_products_links_WB(item_name):
 
     try:
         driver.get('https://www.wildberries.ru')
-        time.sleep(7)
+        time.sleep(5)
 
         find_input = driver.find_element(By.CSS_SELECTOR, '[data-wba-header-name="Search_text"]')
         find_input.clear()
@@ -90,7 +90,7 @@ def get_products_links_YandexMarket(item_name):
 
     try:
         driver.get('https://market.yandex.ru')
-        time.sleep(7)
+        time.sleep(4)
 
 
         find_input = driver.find_element(By.NAME, 'text')
@@ -129,7 +129,7 @@ def get_products_links_MagnitMarket(item_name):
 
     try:
         driver.get('https://mm.ru')
-        time.sleep(7)
+        time.sleep(3)
 
 
         find_input = driver.find_element(By.CSS_SELECTOR, 'input.default-input')
