@@ -159,11 +159,129 @@ def get_products_links_MagnitMarket(item_name):
         driver.quit()
 
 
+def get_products_links_DNS(item_name):
+    driver = uc.Chrome(version_main=133)
+    driver.implicitly_wait(10)
+
+    try:
+        driver.get('https://www.dns-shop.ru')
+        time.sleep(3)
+
+        find_input = driver.find_element(By.NAME, 'q')
+        find_input.clear()
+        find_input.send_keys(item_name)
+        time.sleep(2)
+        find_input.send_keys(Keys.ENTER)
+        time.sleep(2)
+
+
+        try:
+            find_links = driver.find_elements(By.CSS_SELECTOR, 'a.catalog-product__name')
+            product_urls = [link.get_attribute("href") for link in find_links if link.get_attribute("href") is not None]
+
+        except Exception as e:
+            print(f'[!] Что-то пошло не так при сборе ссылок на товары DNS: {e}')
+
+        product_urls = list(product_urls)
+
+        if product_urls:
+            with open('products_urls_dns.json', 'w', encoding='utf-8') as file:
+                json.dump(product_urls, file, indent=4, ensure_ascii=False)
+            print(f'[+] Ссылки на товары DNS сохранены в файл!')
+        else:
+            print('[!] Не удалось собрать ссылки на товары DNS.')
+
+    finally:
+        driver.quit()
+
+
+def get_products_links_Citilink(item_name):
+    driver = uc.Chrome(version_main=133)
+    driver.implicitly_wait(10)
+
+    try:
+        driver.get('https://www.citilink.ru')
+        time.sleep(3)
+
+        find_input = driver.find_element(By.NAME, 'text')
+        find_input.clear()
+        find_input.send_keys(item_name)
+        time.sleep(2)
+        find_input.send_keys(Keys.ENTER)
+        time.sleep(2)
+
+        try:
+            find_links = driver.find_elements(By.CSS_SELECTOR, 'a.app-catalog-51bw0j-Anchor--Anchor-Anchor--StyledAnchor')
+            product_urls = [link.get_attribute("href") for link in find_links if link.get_attribute("href") is not None]
+
+        except Exception as e:
+            print(f'[!] Что-то пошло не так при сборе ссылок на товары Citilink: {e}')
+
+        product_urls = list(product_urls)
+
+        if product_urls:
+            with open('products_urls_citilink.json', 'w', encoding='utf-8') as file:
+                json.dump(product_urls, file, indent=4, ensure_ascii=False)
+            print(f'[+] Ссылки на товары Citilink сохранены в файл!')
+        else:
+            print('[!] Не удалось собрать ссылки на товары Citilink.')
+
+    finally:
+        driver.quit()
+
+
+# def Eldorado (captcha)
+
+
+def get_products_links_M_Video(item_name):
+    driver = uc.Chrome(version_main=133)
+    driver.implicitly_wait(10)
+
+    try:
+        driver.get('https://www.mvideo.ru')
+        time.sleep(3)
+
+        find_input = driver.find_element(By.CSS_SELECTOR, 'input.input__field')
+        find_input.clear()
+        find_input.send_keys(item_name)
+        time.sleep(2)
+        find_input.send_keys(Keys.ENTER)
+        time.sleep(2)
+
+        try:
+            find_links = driver.find_elements(By.CSS_SELECTOR, 'a.product-title__text')
+            product_urls = [link.get_attribute("href") for link in find_links if link.get_attribute("href") is not None]
+
+        except Exception as e:
+            print(f'[!] Что-то пошло не так при сборе ссылок на товары M.Video: {e}')
+
+        product_urls = list(product_urls)
+
+        if product_urls:
+            with open('products_urls_m_video.json', 'w', encoding='utf-8') as file:
+                json.dump(product_urls, file, indent=4, ensure_ascii=False)
+            print(f'[+] Ссылки на товары M.Video сохранены в файл!')
+        else:
+            print('[!] Не удалось собрать ссылки на товары M.Video.')
+
+    finally:
+        driver.quit()
+
+
+
+
+
+
+
 def main():
-    get_products_links_Ozon('наушники xiaomi')
-    get_products_links_WB('наушники xiaomi')
-    get_products_links_YandexMarket('наушники xiaomi')
-    get_products_links_MagnitMarket('наушники xiaomi')
+    #get_products_links_Ozon('наушники xiaomi')
+    #get_products_links_WB('наушники xiaomi')
+    #get_products_links_YandexMarket('наушники xiaomi')
+    #get_products_links_MagnitMarket('наушники xiaomi')
+    #get_products_links_DNS('наушники xiaomi')
+    #get_products_links_Citilink('наушники xiaomi')
+    #get_products_links_M_Video('наушники xiaomi')
+
 
 
 
