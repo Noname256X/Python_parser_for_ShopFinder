@@ -35,7 +35,7 @@ def get_products_links_Ozon(item_name):
             product_urls_dict.update({k: v})
 
         if product_urls:
-            with open('products_urls_ozon.json', 'w', encoding='utf-8') as file:
+            with open('links to json products/products_urls_ozon.json', 'w', encoding='utf-8') as file:
                 json.dump(product_urls, file, indent=4, ensure_ascii=False)
             print(f'[+] Ссылки на товары Ozon сохранены в файл!')
         else:
@@ -74,7 +74,7 @@ def get_products_links_WB(item_name):
             product_urls_dict.update({k: v})
 
         if product_urls:
-            with open('products_urls_wb.json', 'w', encoding='utf-8') as file:
+            with open('links to json products/products_urls_wb.json', 'w', encoding='utf-8') as file:
                 json.dump(product_urls, file, indent=4, ensure_ascii=False)
             print(f'[+] Ссылки на товары WB сохранены в файл!')
         else:
@@ -113,7 +113,7 @@ def get_products_links_YandexMarket(item_name):
         product_urls = list(product_urls)
 
         if product_urls:
-            with open('products_urls_yandex_market.json', 'w', encoding='utf-8') as file:
+            with open('links to json products/products_urls_yandex_market.json', 'w', encoding='utf-8') as file:
                 json.dump(product_urls, file, indent=4, ensure_ascii=False)
             print(f'[+] Ссылки на товары Я.Маркет сохранены в файл!')
         else:
@@ -149,7 +149,7 @@ def get_products_links_MagnitMarket(item_name):
         product_urls = list(product_urls)
 
         if product_urls:
-            with open('products_urls_magnit_market.json', 'w', encoding='utf-8') as file:
+            with open('links to json products/products_urls_magnit_market.json', 'w', encoding='utf-8') as file:
                 json.dump(product_urls, file, indent=4, ensure_ascii=False)
             print(f'[+] Ссылки на товары М.Маркет сохранены в файл!')
         else:
@@ -185,7 +185,7 @@ def get_products_links_DNS(item_name):
         product_urls = list(product_urls)
 
         if product_urls:
-            with open('products_urls_dns.json', 'w', encoding='utf-8') as file:
+            with open('links to json products/products_urls_dns.json', 'w', encoding='utf-8') as file:
                 json.dump(product_urls, file, indent=4, ensure_ascii=False)
             print(f'[+] Ссылки на товары DNS сохранены в файл!')
         else:
@@ -220,7 +220,7 @@ def get_products_links_Citilink(item_name):
         product_urls = list(product_urls)
 
         if product_urls:
-            with open('products_urls_citilink.json', 'w', encoding='utf-8') as file:
+            with open('links to json products/products_urls_citilink.json', 'w', encoding='utf-8') as file:
                 json.dump(product_urls, file, indent=4, ensure_ascii=False)
             print(f'[+] Ссылки на товары Citilink сохранены в файл!')
         else:
@@ -258,7 +258,7 @@ def get_products_links_M_Video(item_name):
         product_urls = list(product_urls)
 
         if product_urls:
-            with open('products_urls_m_video.json', 'w', encoding='utf-8') as file:
+            with open('links to json products/products_urls_m_video.json', 'w', encoding='utf-8') as file:
                 json.dump(product_urls, file, indent=4, ensure_ascii=False)
             print(f'[+] Ссылки на товары M.Video сохранены в файл!')
         else:
