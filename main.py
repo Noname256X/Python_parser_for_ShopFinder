@@ -7,13 +7,14 @@ from bs4 import BeautifulSoup
 import json
 
 
+
 def get_products_links_Ozon(item_name):
     driver = uc.Chrome(version_main=133)
     driver.implicitly_wait(10)
 
     try:
         driver.get('https://ozon.ru')
-        time.sleep(7)
+        time.sleep(3)
 
         find_input = driver.find_element(By.NAME, 'text')
         find_input.clear()
@@ -49,7 +50,7 @@ def get_products_links_WB(item_name):
 
     try:
         driver.get('https://www.wildberries.ru')
-        time.sleep(5)
+        time.sleep(3)
 
         find_input = driver.find_element(By.CSS_SELECTOR, '[data-wba-header-name="Search_text"]')
         find_input.clear()
@@ -84,7 +85,7 @@ def get_products_links_YandexMarket(item_name):
 
     try:
         driver.get('https://market.yandex.ru')
-        time.sleep(4)
+        time.sleep(3)
 
 
         find_input = driver.find_element(By.NAME, 'text')
@@ -346,7 +347,7 @@ def get_products_links_Aliexpress(item_name):
 
     try:
         driver.get('https://aliexpress.ru')
-        time.sleep(7)
+        time.sleep(3)
 
         find_input = driver.find_element(By.NAME, 'SearchText')
         find_input.clear()
@@ -382,7 +383,7 @@ def get_products_links_Joom(item_name):
 
     try:
         driver.get('https://joom.ru')
-        time.sleep(7)
+        time.sleep(3)
 
         find_input = driver.find_element(By.CLASS_NAME, 'input___OsSf0')
         find_input.clear()
@@ -458,7 +459,7 @@ def get_products_links_MegaMarket(item_name):
 
     try:
         driver.get('https://megamarket.ru')
-        time.sleep(7)
+        time.sleep(3)
 
         search_tab = driver.find_element(By.CSS_SELECTOR, 'div.search-tab.navigation-tabs__item.navigation-tabs__item_search')
         search_tab.click()
@@ -497,7 +498,7 @@ def get_products_links_Shop_mts(item_name):
 
     try:
         driver.get('https://shop.mts.ru')
-        time.sleep(7)
+        time.sleep(3)
 
         search_tab = driver.find_element(By.CSS_SELECTOR, 'div.search-field-new')
         search_tab.click()
@@ -536,7 +537,7 @@ def get_products_links_Technopark(item_name):
 
     try:
         driver.get('https://www.technopark.ru')
-        time.sleep(7)
+        time.sleep(3)
 
 
         find_input = driver.find_element(By.NAME, 'search')
@@ -573,7 +574,7 @@ def get_products_links_Lamoda(item_name):
 
     try:
         driver.get('https://www.lamoda.ru')
-        time.sleep(7)
+        time.sleep(3)
 
         find_input = driver.find_element(By.CSS_SELECTOR, 'input._input_mh0i8_19._inputShown_mh0i8_43')
         find_input.clear()
@@ -604,23 +605,25 @@ def get_products_links_Lamoda(item_name):
 
 
 def main():
-    #get_products_links_Ozon('наушники xiaomi')
-    #get_products_links_WB('наушники xiaomi')
-    #get_products_links_YandexMarket('наушники xiaomi') #Выполняется быстро
-    #get_products_links_MagnitMarket('наушники xiaomi') #Выполняется быстро
-    #get_products_links_DNS('наушники xiaomi')
-    #get_products_links_Citilink('наушники xiaomi')
-    #get_products_links_M_Video('наушники xiaomi')
-    #get_products_links_Avito('наушники xiaomi') #Долго выполняется
-    #get_products_links_Youla('наушники xiaomi')
-    #get_products_links_Aliexpress('наушники xiaomi')
-    #get_products_links_Joom('наушники xiaomi') #Выполняется очень быстро
-    #get_products_links_PochtaMarket('наушники xiaomi')
-    #get_products_links_MegaMarket('наушники xiaomi') #Долго выполняется
-    #get_products_links_Shop_mts('наушники xiaomi')
-    #get_products_links_Technopark('наушники xiaomi')
-    get_products_links_Lamoda('кроссовки nike')
+    get_products_links_Ozon('наушники xiaomi') # 16.86 time.sleep(7) 13.01 time.sleep(3)
+    get_products_links_WB('наушники xiaomi') # 14.31 time.sleep(5) 13.10 time.sleep(3)
+    get_products_links_YandexMarket('наушники xiaomi') # 19.83 time.sleep(4) 18.38 time.sleep(3)
+    get_products_links_MagnitMarket('наушники xiaomi') # 35.72 time.sleep(3) 18.47 time.sleep(3)
+    get_products_links_DNS('наушники xiaomi') # 42.17 time.sleep(3) 53.38 time.sleep(3)
+    get_products_links_Citilink('наушники xiaomi') # 19.88 time.sleep(3) 16.72 time.sleep(3)
+    get_products_links_M_Video('наушники xiaomi') # 14.69 time.sleep(3) 14.53 time.sleep(3)
+    get_products_links_Avito('наушники xiaomi') # 95.88 time.sleep(3) 96.14 time.sleep(3)
+    get_products_links_Youla('наушники xiaomi') # 20.92 time.sleep(3) 17.54 time.sleep(3)
+    get_products_links_Aliexpress('наушники xiaomi') # 23.63 time.sleep(7) 19.37 time.sleep(3)
+    get_products_links_Joom('наушники xiaomi') # 18.28 time.sleep(7) 15.63 time.sleep(3)
+    get_products_links_PochtaMarket('наушники xiaomi') # 9.86 no time.sleep() 8.82 no time.sleep()
+    get_products_links_MegaMarket('наушники xiaomi') # 56.33 time.sleep(7) 58.16 time.sleep(3)
+    get_products_links_Shop_mts('наушники xiaomi') # 30.15 time.sleep(7) 28.37 time.sleep(3)
+    get_products_links_Technopark('наушники xiaomi') # 40.60 time.sleep(7) 38.19 time.sleep(3)
+    get_products_links_Lamoda('кроссовки nike') # 21.49 time.sleep(7) 16.93 time.sleep(3)
 
+    # 1. стандарт 480.6 сек. (8,01 мин) в однопотоке
+    # 2. time.sleep(3) 447,04 сек. (7,45 мин) в однопотоке
 
 
 if __name__ == '__main__':
