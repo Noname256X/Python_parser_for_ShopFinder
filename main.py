@@ -491,6 +491,118 @@ def get_products_links_MegaMarket(item_name):
         driver.quit()
 
 
+def get_products_links_Shop_mts(item_name):
+    driver = uc.Chrome(version_main=133)
+    driver.implicitly_wait(10)
+
+    try:
+        driver.get('https://shop.mts.ru')
+        time.sleep(7)
+
+        search_tab = driver.find_element(By.CSS_SELECTOR, 'div.search-field-new')
+        search_tab.click()
+        time.sleep(3)
+        find_input = driver.find_element(By.NAME, 'search-popup-field')
+        find_input.clear()
+        find_input.send_keys(item_name)
+        time.sleep(2)
+        find_input.send_keys(Keys.ENTER)
+        time.sleep(2)
+
+        try:
+            find_links = driver.find_elements(By.CSS_SELECTOR, 'a.product-card__gallery-wrap')
+            product_urls = {link.get_attribute("href") for link in find_links if link.get_attribute("href") is not None}
+
+        except Exception as e:
+            print(f'[!] Что-то пошло не так при сборе ссылок на товары Shop.mts: {e}')
+
+        product_urls = list(product_urls)
+
+        if product_urls:
+            with open('links to json products/products_urls_shop_mts.json', 'w', encoding='utf-8') as file:
+                json.dump(product_urls, file, indent=4, ensure_ascii=False)
+            print(f'[+] Ссылки на товары Shop.mts сохранены в файл!')
+        else:
+            print('[!] Не удалось собрать ссылки на товары Shop.mts.')
+
+
+    finally:
+        driver.quit()
+
+
+def get_products_links_Technopark(item_name):
+    driver = uc.Chrome(version_main=133)
+    driver.implicitly_wait(10)
+
+    try:
+        driver.get('https://www.technopark.ru')
+        time.sleep(7)
+
+
+        find_input = driver.find_element(By.NAME, 'search')
+        find_input.clear()
+        find_input.send_keys(item_name)
+        time.sleep(2)
+        find_input.send_keys(Keys.ENTER)
+        time.sleep(2)
+
+        try:
+            find_links = driver.find_elements(By.CSS_SELECTOR, 'a.product-card-link.product-card-big__image-wrapper')
+            product_urls = {link.get_attribute("href") for link in find_links if link.get_attribute("href") is not None}
+
+        except Exception as e:
+            print(f'[!] Что-то пошло не так при сборе ссылок на товары Technopark: {e}')
+
+        product_urls = list(product_urls)
+
+        if product_urls:
+            with open('links to json products/products_urls_technopark.json', 'w', encoding='utf-8') as file:
+                json.dump(product_urls, file, indent=4, ensure_ascii=False)
+            print(f'[+] Ссылки на товары Technopark сохранены в файл!')
+        else:
+            print('[!] Не удалось собрать ссылки на товары Technopark.')
+
+
+    finally:
+        driver.quit()
+
+
+def get_products_links_Lamoda(item_name):
+    driver = uc.Chrome(version_main=133)
+    driver.implicitly_wait(10)
+
+    try:
+        driver.get('https://www.lamoda.ru')
+        time.sleep(7)
+
+        find_input = driver.find_element(By.CSS_SELECTOR, 'input._input_mh0i8_19._inputShown_mh0i8_43')
+        find_input.clear()
+        find_input.send_keys(item_name)
+        time.sleep(2)
+        find_input.send_keys(Keys.ENTER)
+        time.sleep(2)
+
+        try:
+            find_links = driver.find_elements(By.CSS_SELECTOR, 'a._root_aroml_2.x-product-card__pic')
+            product_urls = {link.get_attribute("href") for link in find_links if link.get_attribute("href") is not None}
+
+        except Exception as e:
+            print(f'[!] Что-то пошло не так при сборе ссылок на товары Lamoda: {e}')
+
+        product_urls = list(product_urls)
+
+        if product_urls:
+            with open('links to json products/products_urls_lamoda.json', 'w', encoding='utf-8') as file:
+                json.dump(product_urls, file, indent=4, ensure_ascii=False)
+            print(f'[+] Ссылки на товары Lamoda сохранены в файл!')
+        else:
+            print('[!] Не удалось собрать ссылки на товары Lamoda.')
+
+
+    finally:
+        driver.quit()
+
+
 def main():
     #get_products_links_Ozon('наушники xiaomi')
     #get_products_links_WB('наушники xiaomi')
@@ -505,6 +617,9 @@ def main():
     #get_products_links_Joom('наушники xiaomi') #Выполняется очень быстро
     #get_products_links_PochtaMarket('наушники xiaomi')
     #get_products_links_MegaMarket('наушники xiaomi') #Долго выполняется
+    #get_products_links_Shop_mts('наушники xiaomi')
+    #get_products_links_Technopark('наушники xiaomi')
+    get_products_links_Lamoda('кроссовки nike')
 
 
 
