@@ -13,15 +13,9 @@ def get_products_links_Ozon(item_name):
     driver.implicitly_wait(10)
 
     try:
-        driver.get('https://ozon.ru')
+        text_processing = item_name.replace(' ', '+')
+        driver.get(f'https://www.ozon.ru/search/?deny_category_prediction=true&from_global=true&text={text_processing}')
         time.sleep(3)
-
-        find_input = driver.find_element(By.NAME, 'text')
-        find_input.clear()
-        find_input.send_keys(item_name)
-        time.sleep(2)
-        find_input.send_keys(Keys.ENTER)
-        time.sleep(2)
 
         try:
             find_links = driver.find_elements(By.CSS_SELECTOR, 'div.tile-root a.tile-clickable-element')
@@ -49,15 +43,9 @@ def get_products_links_WB(item_name):
     driver.implicitly_wait(10)
 
     try:
-        driver.get('https://www.wildberries.ru')
+        text_processing = item_name.replace(' ', '%20')
+        driver.get(f'https://www.wildberries.ru/catalog/0/search.aspx?search={text_processing}')
         time.sleep(3)
-
-        find_input = driver.find_element(By.CSS_SELECTOR, '[data-wba-header-name="Search_text"]')
-        find_input.clear()
-        find_input.send_keys(item_name)
-        time.sleep(2)
-        find_input.send_keys(Keys.ENTER)
-        time.sleep(2)
 
         try:
             find_links = driver.find_elements(By.CSS_SELECTOR, 'a.product-card__link')
@@ -84,16 +72,9 @@ def get_products_links_YandexMarket(item_name):
     driver.implicitly_wait(10)
 
     try:
-        driver.get('https://market.yandex.ru')
+        text_processing = item_name.replace(' ', '%20')
+        driver.get(f'https://market.yandex.ru/search?text={text_processing}')
         time.sleep(3)
-
-
-        find_input = driver.find_element(By.NAME, 'text')
-        find_input.clear()
-        find_input.send_keys(item_name)
-        time.sleep(2)
-        find_input.send_keys(Keys.ENTER)
-        time.sleep(2)
 
         try:
             find_links = driver.find_elements(By.CSS_SELECTOR, 'a.EQlfk')
@@ -123,20 +104,12 @@ def get_products_links_MagnitMarket(item_name):
     driver.implicitly_wait(10)
 
     try:
-        driver.get('https://mm.ru')
+        text_processing = item_name.replace(' ', '%20')
+        driver.get(f'https://mm.ru/search?query={text_processing}')
         time.sleep(3)
-
-
-        find_input = driver.find_element(By.CSS_SELECTOR, 'input.default-input')
-        find_input.clear()
-        find_input.send_keys(item_name)
-        time.sleep(2)
-        find_input.send_keys(Keys.ENTER)
-        time.sleep(2)
 
         try:
             find_links = driver.find_elements(By.CSS_SELECTOR, 'div[data-test-id="item__product-card"] a[ui-link="ui-link"]')
-            #product_urls = [link.get_attribute("href") for link in find_links if link.get_attribute("href") is not None]
             product_urls = {link.get_attribute("href") for link in find_links if link.get_attribute("href") is not None}
 
         except Exception as e:
@@ -196,15 +169,9 @@ def get_products_links_Citilink(item_name):
     driver.implicitly_wait(10)
 
     try:
-        driver.get('https://www.citilink.ru')
+        text_processing = item_name.replace(' ', '+')
+        driver.get(f'https://www.citilink.ru/search/?text={text_processing}')
         time.sleep(3)
-
-        find_input = driver.find_element(By.NAME, 'text')
-        find_input.clear()
-        find_input.send_keys(item_name)
-        time.sleep(2)
-        find_input.send_keys(Keys.ENTER)
-        time.sleep(2)
 
         try:
             find_links = driver.find_elements(By.CSS_SELECTOR, 'a.app-catalog-51bw0j-Anchor--Anchor-Anchor--StyledAnchor')
@@ -234,15 +201,9 @@ def get_products_links_M_Video(item_name):
     driver.implicitly_wait(10)
 
     try:
-        driver.get('https://www.mvideo.ru')
+        text_processing = item_name.replace(' ', '+')
+        driver.get(f'https://www.mvideo.ru/product-list-page?q={text_processing}')
         time.sleep(3)
-
-        find_input = driver.find_element(By.CSS_SELECTOR, 'input.input__field')
-        find_input.clear()
-        find_input.send_keys(item_name)
-        time.sleep(2)
-        find_input.send_keys(Keys.ENTER)
-        time.sleep(2)
 
         try:
             find_links = driver.find_elements(By.CSS_SELECTOR, 'a.product-title__text')
@@ -346,15 +307,9 @@ def get_products_links_Aliexpress(item_name):
     driver.implicitly_wait(10)
 
     try:
-        driver.get('https://aliexpress.ru')
+        text_processing = item_name.replace(' ', '+')
+        driver.get(f'https://aliexpress.ru/wholesale?SearchText={text_processing}')
         time.sleep(3)
-
-        find_input = driver.find_element(By.NAME, 'SearchText')
-        find_input.clear()
-        find_input.send_keys(item_name)
-        time.sleep(2)
-        find_input.send_keys(Keys.ENTER)
-        time.sleep(2)
 
         try:
             find_links = driver.find_elements(By.CSS_SELECTOR, 'a.red-snippet_RedSnippet__gallery__e15tmk')
@@ -382,15 +337,9 @@ def get_products_links_Joom(item_name):
     driver.implicitly_wait(10)
 
     try:
-        driver.get('https://joom.ru')
+        text_processing = item_name.replace(' ', '+')
+        driver.get(f'https://www.joom.ru/ru/search/q.{text_processing}')
         time.sleep(3)
-
-        find_input = driver.find_element(By.CLASS_NAME, 'input___OsSf0')
-        find_input.clear()
-        find_input.send_keys(item_name)
-        time.sleep(2)
-        find_input.send_keys(Keys.ENTER)
-        time.sleep(2)
 
         try:
             find_links = driver.find_elements(By.CSS_SELECTOR, 'a.content___N4xbX')
@@ -458,18 +407,9 @@ def get_products_links_MegaMarket(item_name):
     driver.implicitly_wait(10)
 
     try:
-        driver.get('https://megamarket.ru')
+        text_processing = item_name.replace(' ', '%20')
+        driver.get(f'https://megamarket.ru/catalog/?q={text_processing}')
         time.sleep(3)
-
-        search_tab = driver.find_element(By.CSS_SELECTOR, 'div.search-tab.navigation-tabs__item.navigation-tabs__item_search')
-        search_tab.click()
-        time.sleep(3)
-        find_input = driver.find_element(By.CSS_SELECTOR, 'textarea.search-input__textarea.search-input__textarea_header')
-        find_input.clear()
-        find_input.send_keys(item_name)
-        time.sleep(2)
-        find_input.send_keys(Keys.ENTER)
-        time.sleep(2)
 
         try:
             find_links = driver.find_elements(By.CSS_SELECTOR, 'a.catalog-item-regular-desktop__title-link')
@@ -497,18 +437,9 @@ def get_products_links_Shop_mts(item_name):
     driver.implicitly_wait(10)
 
     try:
-        driver.get('https://shop.mts.ru')
+        text_processing = item_name.replace(' ', '%20')
+        driver.get(f'https://shop.mts.ru/search/?TYPE=products&q={text_processing}')
         time.sleep(3)
-
-        search_tab = driver.find_element(By.CSS_SELECTOR, 'div.search-field-new')
-        search_tab.click()
-        time.sleep(3)
-        find_input = driver.find_element(By.NAME, 'search-popup-field')
-        find_input.clear()
-        find_input.send_keys(item_name)
-        time.sleep(2)
-        find_input.send_keys(Keys.ENTER)
-        time.sleep(2)
 
         try:
             find_links = driver.find_elements(By.CSS_SELECTOR, 'a.product-card__gallery-wrap')
@@ -536,16 +467,9 @@ def get_products_links_Technopark(item_name):
     driver.implicitly_wait(10)
 
     try:
-        driver.get('https://www.technopark.ru')
+        text_processing = item_name.replace(' ', '%20')
+        driver.get(f'https://www.technopark.ru/search/?q={text_processing}')
         time.sleep(3)
-
-
-        find_input = driver.find_element(By.NAME, 'search')
-        find_input.clear()
-        find_input.send_keys(item_name)
-        time.sleep(2)
-        find_input.send_keys(Keys.ENTER)
-        time.sleep(2)
 
         try:
             find_links = driver.find_elements(By.CSS_SELECTOR, 'a.product-card-link.product-card-big__image-wrapper')
@@ -573,15 +497,9 @@ def get_products_links_Lamoda(item_name):
     driver.implicitly_wait(10)
 
     try:
-        driver.get('https://www.lamoda.ru')
+        text_processing = item_name.replace(' ', '%20')
+        driver.get(f'https://www.lamoda.ru/catalogsearch/result/?q={text_processing}')
         time.sleep(3)
-
-        find_input = driver.find_element(By.CSS_SELECTOR, 'input._input_mh0i8_19._inputShown_mh0i8_43')
-        find_input.clear()
-        find_input.send_keys(item_name)
-        time.sleep(2)
-        find_input.send_keys(Keys.ENTER)
-        time.sleep(2)
 
         try:
             find_links = driver.find_elements(By.CSS_SELECTOR, 'a._root_aroml_2.x-product-card__pic')
@@ -605,22 +523,22 @@ def get_products_links_Lamoda(item_name):
 
 
 def main():
-    get_products_links_Ozon('наушники xiaomi') # 16.86 time.sleep(7) 13.01 time.sleep(3)
-    get_products_links_WB('наушники xiaomi') # 14.31 time.sleep(5) 13.10 time.sleep(3)
-    get_products_links_YandexMarket('наушники xiaomi') # 19.83 time.sleep(4) 18.38 time.sleep(3)
-    get_products_links_MagnitMarket('наушники xiaomi') # 35.72 time.sleep(3) 18.47 time.sleep(3)
-    get_products_links_DNS('наушники xiaomi') # 42.17 time.sleep(3) 53.38 time.sleep(3)
-    get_products_links_Citilink('наушники xiaomi') # 19.88 time.sleep(3) 16.72 time.sleep(3)
-    get_products_links_M_Video('наушники xiaomi') # 14.69 time.sleep(3) 14.53 time.sleep(3)
-    get_products_links_Avito('наушники xiaomi') # 95.88 time.sleep(3) 96.14 time.sleep(3)
-    get_products_links_Youla('наушники xiaomi') # 20.92 time.sleep(3) 17.54 time.sleep(3)
-    get_products_links_Aliexpress('наушники xiaomi') # 23.63 time.sleep(7) 19.37 time.sleep(3)
-    get_products_links_Joom('наушники xiaomi') # 18.28 time.sleep(7) 15.63 time.sleep(3)
-    get_products_links_PochtaMarket('наушники xiaomi') # 9.86 no time.sleep() 8.82 no time.sleep()
-    get_products_links_MegaMarket('наушники xiaomi') # 56.33 time.sleep(7) 58.16 time.sleep(3)
-    get_products_links_Shop_mts('наушники xiaomi') # 30.15 time.sleep(7) 28.37 time.sleep(3)
-    get_products_links_Technopark('наушники xiaomi') # 40.60 time.sleep(7) 38.19 time.sleep(3)
-    get_products_links_Lamoda('кроссовки nike') # 21.49 time.sleep(7) 16.93 time.sleep(3)
+    get_products_links_Ozon('наушники xiaomi') # 16.86 time.sleep(7) | 13.01 time.sleep(3) | query optimization
+    #get_products_links_WB('наушники xiaomi') # 14.31 time.sleep(5) | 13.10 time.sleep(3) | query optimization
+    #get_products_links_YandexMarket('наушники xiaomi') # 19.83 time.sleep(4) | 18.38 time.sleep(3) | query optimization
+    #get_products_links_MagnitMarket('наушники xiaomi') # 35.72 time.sleep(3) | 18.47 time.sleep(3) | query optimization
+    #get_products_links_DNS('наушники xiaomi') # 42.17 time.sleep(3) | 53.38 time.sleep(3)
+    #get_products_links_Citilink('наушники xiaomi') # 19.88 time.sleep(3) | 16.72 time.sleep(3) | query optimization
+    #get_products_links_M_Video('наушники xiaomi') # 14.69 time.sleep(3) | 14.53 time.sleep(3) | query optimization
+    #get_products_links_Avito('наушники xiaomi') # 95.88 time.sleep(3) | 96.14 time.sleep(3)
+    #get_products_links_Youla('наушники xiaomi') # 20.92 time.sleep(3) | 17.54 time.sleep(3)
+    #get_products_links_Aliexpress('наушники xiaomi') # 23.63 time.sleep(7) | 19.37 time.sleep(3) | query optimization
+    #get_products_links_Joom('наушники xiaomi') # 18.28 time.sleep(7) | 15.63 time.sleep(3) | query optimization
+    #get_products_links_PochtaMarket('наушники xiaomi') # 9.86 no time.sleep() | 8.82 no time.sleep()
+    #get_products_links_MegaMarket('наушники xiaomi') # 56.33 time.sleep(7) | 58.16 time.sleep(3) | query optimization
+    #get_products_links_Shop_mts('наушники xiaomi') # 30.15 time.sleep(7) | 28.37 time.sleep(3) | query optimization
+    #get_products_links_Technopark('наушники xiaomi') # 40.60 time.sleep(7) | 38.19 time.sleep(3) | query optimization
+    #get_products_links_Lamoda('кроссовки nike') # 21.49 time.sleep(7) | 16.93 time.sleep(3)
 
     # 1. стандарт 480.6 сек. (8,01 мин) в однопотоке
     # 2. time.sleep(3) 447,04 сек. (7,45 мин) в однопотоке
