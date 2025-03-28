@@ -2,13 +2,20 @@ import time
 import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import requests
 from bs4 import BeautifulSoup
 import json
+import os
+import re
+from Parser import get_products_data_Ozon
+from scroll_page import dynamic_scroll
 
 
 
-def get_products_links_Ozon(item_name):
+def get_products_links_html_Ozon(item_name):
     driver = uc.Chrome(version_main=133)
     driver.implicitly_wait(10)
 
@@ -23,19 +30,36 @@ def get_products_links_Ozon(item_name):
 
         except Exception as e:
             print(f'[!] Что-то пошло не так при сборе ссылок на товары Ozon: {e}')
+            return
 
         product_urls = list(product_urls)
 
-        if product_urls:
-            with open('links to json products/products_urls_ozon.json', 'w', encoding='utf-8') as file:
-                json.dump(product_urls, file, indent=4, ensure_ascii=False)
-            print(f'[+] Ссылки на товары Ozon сохранены в файл!')
-        else:
-            print('[!] Не удалось собрать ссылки на товары Ozon.')
+        os.makedirs("json products html/Ozon/", exist_ok=True)
 
+        count = 0
+        for product_url in product_urls:
+            if not product_url: continue
+
+            try:
+                driver.get(product_url)
+                time.sleep(3)
+
+                dynamic_scroll(driver)
+
+                filename = f'{text_processing}{count}.html'
+                htmlpath = os.path.join("json products html/Ozon/", filename)
+
+                with open(htmlpath, 'w', encoding='utf-8') as f:
+                    f.write(driver.page_source)
+
+                get_products_data_Ozon(product_url, htmlpath)
+                count += 1
+            except Exception as e:
+                print(f"Ошибка обработки {product_url}: {str(e)}")
 
     finally:
         driver.quit()
+        print("Ozon. Обработка завершена!")
 
 
 def get_products_links_WB(item_name):
@@ -523,26 +547,26 @@ def get_products_links_Lamoda(item_name):
 
 
 def main():
-    get_products_links_Ozon('наушники xiaomi') # 16.86 time.sleep(7) | 13.01 time.sleep(3) | query optimization
-    #get_products_links_WB('наушники xiaomi') # 14.31 time.sleep(5) | 13.10 time.sleep(3) | query optimization
-    #get_products_links_YandexMarket('наушники xiaomi') # 19.83 time.sleep(4) | 18.38 time.sleep(3) | query optimization
-    #get_products_links_MagnitMarket('наушники xiaomi') # 35.72 time.sleep(3) | 18.47 time.sleep(3) | query optimization
+    get_products_links_html_Ozon('наушники xiaomi') # 16.86 time.sleep(7) | 13.01 time.sleep(3) | 7.40 query optimization
+    #get_products_links_WB('наушники xiaomi') # 14.31 time.sleep(5) | 13.10 time.sleep(3) | 9.13 query optimization
+    #get_products_links_YandexMarket('наушники xiaomi') # 19.83 time.sleep(4) | 18.38 time.sleep(3) | 13.15 query optimization
+    #get_products_links_MagnitMarket('наушники xiaomi') # 35.72 time.sleep(3) | 18.47 time.sleep(3) | 30.49 query optimization
     #get_products_links_DNS('наушники xiaomi') # 42.17 time.sleep(3) | 53.38 time.sleep(3)
-    #get_products_links_Citilink('наушники xiaomi') # 19.88 time.sleep(3) | 16.72 time.sleep(3) | query optimization
-    #get_products_links_M_Video('наушники xiaomi') # 14.69 time.sleep(3) | 14.53 time.sleep(3) | query optimization
+    #get_products_links_Citilink('наушники xiaomi') # 19.88 time.sleep(3) | 16.72 time.sleep(3) | 9.55 query optimization
+    #get_products_links_M_Video('наушники xiaomi') # 14.69 time.sleep(3) | 14.53 time.sleep(3) | 9.62 query optimization
     #get_products_links_Avito('наушники xiaomi') # 95.88 time.sleep(3) | 96.14 time.sleep(3)
     #get_products_links_Youla('наушники xiaomi') # 20.92 time.sleep(3) | 17.54 time.sleep(3)
-    #get_products_links_Aliexpress('наушники xiaomi') # 23.63 time.sleep(7) | 19.37 time.sleep(3) | query optimization
-    #get_products_links_Joom('наушники xiaomi') # 18.28 time.sleep(7) | 15.63 time.sleep(3) | query optimization
+    #get_products_links_Aliexpress('наушники xiaomi') # 23.63 time.sleep(7) | 19.37 time.sleep(3) | 19.95 query optimization
+    #get_products_links_Joom('наушники xiaomi') # 18.28 time.sleep(7) | 15.63 time.sleep(3) | 9.49 query optimization
     #get_products_links_PochtaMarket('наушники xiaomi') # 9.86 no time.sleep() | 8.82 no time.sleep()
-    #get_products_links_MegaMarket('наушники xiaomi') # 56.33 time.sleep(7) | 58.16 time.sleep(3) | query optimization
-    #get_products_links_Shop_mts('наушники xiaomi') # 30.15 time.sleep(7) | 28.37 time.sleep(3) | query optimization
-    #get_products_links_Technopark('наушники xiaomi') # 40.60 time.sleep(7) | 38.19 time.sleep(3) | query optimization
-    #get_products_links_Lamoda('кроссовки nike') # 21.49 time.sleep(7) | 16.93 time.sleep(3)
+    #get_products_links_MegaMarket('наушники xiaomi') # 56.33 time.sleep(7) | 58.16 time.sleep(3) | 50.78 query optimization
+    #get_products_links_Shop_mts('наушники xiaomi') # 30.15 time.sleep(7) | 28.37 time.sleep(3) | 12.60 query optimization
+    #get_products_links_Technopark('наушники xiaomi') # 40.60 time.sleep(7) | 38.19 time.sleep(3) | 31.43 query optimization
+    #get_products_links_Lamoda('кроссовки nike') # 21.49 time.sleep(7) | 16.93 time.sleep(3) | 32.77 query optimization
 
     # 1. стандарт 480.6 сек. (8,01 мин) в однопотоке
     # 2. time.sleep(3) 447,04 сек. (7,45 мин) в однопотоке
-
+    # 3. query optimization 412,24 сек. (6,87 мин))
 
 if __name__ == '__main__':
     main()
