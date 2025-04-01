@@ -44,15 +44,15 @@ def get_products_links_html_Ozon(item_name):
                 driver.get(product_url)
                 time.sleep(3)
 
-                dynamic_scroll(driver)
+                #dynamic_scroll(driver)
 
-                filename = f'{text_processing}{count}.html'
-                htmlpath = os.path.join("json products html/Ozon/", filename)
+                #filename = f'{text_processing}{count}.html'
+                #htmlpath = os.path.join("json products html/Ozon/", filename)
 
-                with open(htmlpath, 'w', encoding='utf-8') as f:
-                    f.write(driver.page_source)
+                #with open(htmlpath, 'w', encoding='utf-8') as f:
+                    #f.write(driver.page_source)
 
-                get_products_data_Ozon(product_url, htmlpath)
+                get_products_data_Ozon(product_url, driver=driver)
                 count += 1
             except Exception as e:
                 print(f"Ошибка обработки {product_url}: {str(e)}")
