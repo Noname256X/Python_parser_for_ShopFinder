@@ -16,7 +16,7 @@ from scroll_page import dynamic_scroll
 
 
 def get_products_links_html_Ozon(item_name):
-    driver = uc.Chrome(version_main=133)
+    driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
     try:
@@ -43,14 +43,6 @@ def get_products_links_html_Ozon(item_name):
             try:
                 driver.get(product_url)
                 time.sleep(3)
-
-                #dynamic_scroll(driver)
-
-                #filename = f'{text_processing}{count}.html'
-                #htmlpath = os.path.join("json products html/Ozon/", filename)
-
-                #with open(htmlpath, 'w', encoding='utf-8') as f:
-                    #f.write(driver.page_source)
 
                 get_products_data_Ozon(product_url, driver=driver)
                 count += 1
@@ -567,6 +559,7 @@ def main():
     # 1. стандарт 480.6 сек. (8,01 мин) в однопотоке
     # 2. time.sleep(3) 447,04 сек. (7,45 мин) в однопотоке
     # 3. query optimization 412,24 сек. (6,87 мин))
+
 
 if __name__ == '__main__':
     main()
