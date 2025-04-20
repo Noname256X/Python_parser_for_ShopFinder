@@ -93,7 +93,7 @@ def get_products_links_WB(item_name):
 
 
 def get_products_links_YandexMarket(item_name):
-    driver = uc.Chrome(version_main=133)
+    driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
     try:
@@ -125,7 +125,7 @@ def get_products_links_YandexMarket(item_name):
 
 
 def get_products_links_MagnitMarket(item_name):
-    driver = uc.Chrome(version_main=133)
+    driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
     try:
@@ -154,7 +154,7 @@ def get_products_links_MagnitMarket(item_name):
 
 
 def get_products_links_DNS(item_name):
-    driver = uc.Chrome(version_main=133)
+    driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
     try:
@@ -190,7 +190,7 @@ def get_products_links_DNS(item_name):
 
 
 def get_products_links_Citilink(item_name):
-    driver = uc.Chrome(version_main=133)
+    driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
     try:
@@ -222,7 +222,7 @@ def get_products_links_Citilink(item_name):
 
 
 def get_products_links_M_Video(item_name):
-    driver = uc.Chrome(version_main=133)
+    driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
     try:
@@ -251,7 +251,7 @@ def get_products_links_M_Video(item_name):
 
 
 def get_products_links_Avito(item_name):
-    driver = uc.Chrome(version_main=133)
+    driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
     try:
@@ -289,7 +289,7 @@ def get_products_links_Avito(item_name):
 
 
 def get_products_links_Youla(item_name):
-    driver = uc.Chrome(version_main=133)
+    driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
     try:
@@ -328,7 +328,7 @@ def get_products_links_Youla(item_name):
 
 
 def get_products_links_Aliexpress(item_name):
-    driver = uc.Chrome(version_main=133)
+    driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
     try:
@@ -358,7 +358,7 @@ def get_products_links_Aliexpress(item_name):
 
 
 def get_products_links_Joom(item_name):
-    driver = uc.Chrome(version_main=133)
+    driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
     try:
@@ -388,7 +388,7 @@ def get_products_links_Joom(item_name):
 
 
 def get_products_links_PochtaMarket(item_name):
-    driver = uc.Chrome(version_main=133)
+    driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
     try:
@@ -428,7 +428,7 @@ def get_products_links_PochtaMarket(item_name):
 
 
 def get_products_links_MegaMarket(item_name):
-    driver = uc.Chrome(version_main=133)
+    driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
     try:
@@ -458,7 +458,7 @@ def get_products_links_MegaMarket(item_name):
 
 
 def get_products_links_Shop_mts(item_name):
-    driver = uc.Chrome(version_main=133)
+    driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
     try:
@@ -488,7 +488,7 @@ def get_products_links_Shop_mts(item_name):
 
 
 def get_products_links_Technopark(item_name):
-    driver = uc.Chrome(version_main=133)
+    driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
     try:
@@ -518,7 +518,7 @@ def get_products_links_Technopark(item_name):
 
 
 def get_products_links_Lamoda(item_name):
-    driver = uc.Chrome(version_main=133)
+    driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
     try:
@@ -549,8 +549,8 @@ def get_products_links_Lamoda(item_name):
 
 def main():
     #get_products_links_html_Ozon('наушники xiaomi') # 16.86 time.sleep(7) | 13.01 time.sleep(3) | 7.40 query optimization
-    get_products_links_WB('наушники xiaomi') # 14.31 time.sleep(5) | 13.10 time.sleep(3) | 9.13 query optimization
-    #get_products_links_YandexMarket('наушники xiaomi') # 19.83 time.sleep(4) | 18.38 time.sleep(3) | 13.15 query optimization
+    #get_products_links_WB('наушники xiaomi') # 14.31 time.sleep(5) | 13.10 time.sleep(3) | 9.13 query optimization
+    get_products_links_YandexMarket('наушники xiaomi') # 19.83 time.sleep(4) | 18.38 time.sleep(3) | 13.15 query optimization
     #get_products_links_MagnitMarket('наушники xiaomi') # 35.72 time.sleep(3) | 18.47 time.sleep(3) | 30.49 query optimization
     #get_products_links_DNS('наушники xiaomi') # 42.17 time.sleep(3) | 53.38 time.sleep(3)
     #get_products_links_Citilink('наушники xiaomi') # 19.88 time.sleep(3) | 16.72 time.sleep(3) | 9.55 query optimization

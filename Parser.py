@@ -300,5 +300,4 @@ def get_products_data_WB(link_products, driver):
     for img in image_urls:
         print(img)
 
-
     print('-----------------------------')
