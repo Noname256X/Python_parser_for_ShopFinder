@@ -6,12 +6,12 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import requests
-from bs4 import BeautifulSoup
 import json
 import os
 import re
 from Parser import *
 from scroll_page import dynamic_scroll
+import random
 
 
 
@@ -94,15 +94,17 @@ def get_products_links_WB(item_name):
 
 def get_products_links_YandexMarket(item_name):
     driver = uc.Chrome(version_main=135)
-    driver.implicitly_wait(10)
+    driver.implicitly_wait(15)
 
     try:
         text_processing = item_name.replace(' ', '%20')
         driver.get(f'https://market.yandex.ru/search?text={text_processing}')
-        time.sleep(3)
+        time.sleep(random.randint(3, 10))
 
         try:
             find_links = driver.find_elements(By.CSS_SELECTOR, 'a.EQlfk')
+            time.sleep(random.randint(5, 10))
+
             product_urls = {
                 link.get_attribute("href") for link in find_links
                 if link.get_attribute("href") is not None and "/product--" in link.get_attribute("href")
@@ -113,12 +115,21 @@ def get_products_links_YandexMarket(item_name):
 
         product_urls = list(product_urls)
 
-        if product_urls:
-            with open('links to json products/products_urls_yandex_market.json', 'w', encoding='utf-8') as file:
-                json.dump(product_urls, file, indent=4, ensure_ascii=False)
-            print(f'[+] Ссылки на товары Я.Маркет сохранены в файл!')
-        else:
-            print('[!] Не удалось собрать ссылки на товары Я.Маркет.')
+        os.makedirs("json products html/YandexMarket/", exist_ok=True)
+
+        count = 0
+        for product_url in product_urls:
+            if not product_url: continue
+
+            try:
+                driver.get(product_url)
+                time.sleep(3)
+
+                get_products_data_YandexMarket(product_url, driver=driver)
+                count += 1
+            except Exception as e:
+                print(f'Ошибка обработки {product_url}: {str(e)}')
+                print('-----------------------------')
 
     finally:
         driver.quit()
@@ -549,7 +560,7 @@ def get_products_links_Lamoda(item_name):
 
 def main():
     #get_products_links_html_Ozon('наушники xiaomi') # 16.86 time.sleep(7) | 13.01 time.sleep(3) | 7.40 query optimization
-    #get_products_links_WB('наушники xiaomi') # 14.31 time.sleep(5) | 13.10 time.sleep(3) | 9.13 query optimization
+    #et_products_links_WB('наушники xiaomi') # 14.31 time.sleep(5) | 13.10 time.sleep(3) | 9.13 query optimization
     get_products_links_YandexMarket('наушники xiaomi') # 19.83 time.sleep(4) | 18.38 time.sleep(3) | 13.15 query optimization
     #get_products_links_MagnitMarket('наушники xiaomi') # 35.72 time.sleep(3) | 18.47 time.sleep(3) | 30.49 query optimization
     #get_products_links_DNS('наушники xiaomi') # 42.17 time.sleep(3) | 53.38 time.sleep(3)
