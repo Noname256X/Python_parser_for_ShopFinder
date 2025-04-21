@@ -34,8 +34,6 @@ def get_products_links_html_Ozon(item_name):
 
         product_urls = list(product_urls)
 
-        os.makedirs("json products html/Ozon/", exist_ok=True)
-
         count = 0
         for product_url in product_urls:
             if not product_url: continue
@@ -72,8 +70,6 @@ def get_products_links_WB(item_name):
             return
 
         product_urls = list(product_urls)
-
-        os.makedirs("json products html/WB/", exist_ok=True)
 
         count = 0
         for product_url in product_urls:
@@ -114,8 +110,6 @@ def get_products_links_YandexMarket(item_name):
             print(f'[!] Что-то пошло не так при сборе ссылок на товары Я.Маркет: {e}')
 
         product_urls = list(product_urls)
-
-        os.makedirs("json products html/YandexMarket/", exist_ok=True)
 
         count = 0
         for product_url in product_urls:
@@ -560,7 +554,7 @@ def get_products_links_Lamoda(item_name):
 
 def main():
     #get_products_links_html_Ozon('наушники xiaomi') # 16.86 time.sleep(7) | 13.01 time.sleep(3) | 7.40 query optimization
-    #et_products_links_WB('наушники xiaomi') # 14.31 time.sleep(5) | 13.10 time.sleep(3) | 9.13 query optimization
+    #get_products_links_WB('наушники xiaomi') # 14.31 time.sleep(5) | 13.10 time.sleep(3) | 9.13 query optimization
     get_products_links_YandexMarket('наушники xiaomi') # 19.83 time.sleep(4) | 18.38 time.sleep(3) | 13.15 query optimization
     #get_products_links_MagnitMarket('наушники xiaomi') # 35.72 time.sleep(3) | 18.47 time.sleep(3) | 30.49 query optimization
     #get_products_links_DNS('наушники xiaomi') # 42.17 time.sleep(3) | 53.38 time.sleep(3)

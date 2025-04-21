@@ -134,31 +134,14 @@ def get_products_data_Ozon(link_products, driver):
     rating, reviews = get_product_rating_reviews(driver)
     image_urls = get_product_images(driver)
 
-
-    if article:
+    if article != None:
         print(f'Артикул: {article.group(1)}')
     else:
-        print(f'Артикул: None')
-
-    if title:
-        print(f"Заголовок товара: {title}")
-    else:
-        print("Заголовок товара: None")
-
-    if price:
-        print(f'Цена товара: {price}')
-    else:
-        print(f'Цена на товара: None')
-
-    if rating:
-        print(f'Рейтинг: {rating}')
-    else:
-        print('Рейтинг: None')
-
-    if reviews:
-        print(f'Отзывы: {reviews}')
-    else:
-        print('Отзывы: None')
+        print(f'Артикул: {article}')
+    print(f'Заголовок товара: {title}')
+    print(f'Цена товара: {price}')
+    print(f'Рейтинг: {rating}')
+    print(f'Отзывы: {reviews}')
 
     for idx, url in enumerate(image_urls, 1):
         print(f"Изображение {idx}: {url}")
@@ -272,31 +255,14 @@ def get_products_data_WB(link_products, driver):
     rating, reviews = get_product_rating_reviews(driver)
     image_urls = get_product_images(driver, article.group(1))
 
-
-    if article:
+    if article != None:
         print(f'Артикул: {article.group(1)}')
     else:
-        print(f'Артикул: None')
-
-    if title:
-        print(f"Заголовок товара: {title}")
-    else:
-        print("Заголовок товара: None")
-
-    if price:
-        print(f'Цена товара: {price}')
-    else:
-        print(f'Цена товара: None')
-
-    if rating:
-        print(f'Рейтинг: {rating}')
-    else:
-        print('Рейтинг: None')
-
-    if reviews:
-        print(f'Отзывы: {reviews}')
-    else:
-        print('Отзывы: None')
+        print(f'Артикул: {article}')
+    print(f'Заголовок товара: {title}')
+    print(f'Цена товара: {price}')
+    print(f'Рейтинг: {rating}')
+    print(f'Отзывы: {reviews}')
 
     print(f"Найдено изображений: {len(image_urls)}")
     for img in image_urls:
