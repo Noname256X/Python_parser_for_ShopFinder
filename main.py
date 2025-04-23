@@ -15,7 +15,7 @@ import random
 
 
 
-def get_products_links_html_Ozon(item_name):
+def get_products_links_html_Ozon(item_name, user_id):
     driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
@@ -42,17 +42,23 @@ def get_products_links_html_Ozon(item_name):
                 driver.get(product_url)
                 time.sleep(3)
 
-                get_products_data_Ozon(product_url, driver=driver)
+                get_products_data_Ozon(product_url, driver=driver, user_id=user_id)
                 count += 1
+
             except Exception as e:
                 print(f"Ошибка обработки {product_url}: {str(e)}")
+                print('-----------------------------')
+
+        print('Данные о товарах упакованы в json') # доработать
+        # отправка json результата на REST_API
+        # удаление json-файла на сервере
 
     finally:
         driver.quit()
         print("Ozon. Обработка завершена!")
 
 
-def get_products_links_WB(item_name):
+def get_products_links_WB(item_name, user_id):
     driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
@@ -79,23 +85,28 @@ def get_products_links_WB(item_name):
                 driver.get(product_url)
                 time.sleep(3)
 
-                get_products_data_WB(product_url, driver=driver)
+                get_products_data_WB(product_url, driver=driver, user_id=user_id)
                 count += 1
             except Exception as e:
                 print(f"Ошибка обработки {product_url}: {str(e)}")
+                print('-----------------------------')
+
+        print('Данные о товарах упакованы в json') # доработать
+        # отправка json результата на REST_API
+        # удаление json-файла на сервере
 
     finally:
         driver.quit()
 
 
-def get_products_links_YandexMarket(item_name):
+def get_products_links_YandexMarket(item_name, user_id):
     driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(15)
 
     try:
         text_processing = item_name.replace(' ', '%20')
         driver.get(f'https://market.yandex.ru/search?text={text_processing}')
-        time.sleep(random.randint(3, 10))
+        time.sleep(random.randint(4, 10))
 
         try:
             find_links = driver.find_elements(By.CSS_SELECTOR, 'a.EQlfk')
@@ -119,11 +130,15 @@ def get_products_links_YandexMarket(item_name):
                 driver.get(product_url)
                 time.sleep(3)
 
-                get_products_data_YandexMarket(product_url, driver=driver)
+                get_products_data_YandexMarket(product_url, driver=driver, user_id=user_id)
                 count += 1
             except Exception as e:
                 print(f'Ошибка обработки {product_url}: {str(e)}')
                 print('-----------------------------')
+
+        print('Данные о товарах упакованы в json') # доработать
+        # отправка json результата на REST_API
+        # удаление json-файла на сервере
 
     finally:
         driver.quit()
@@ -553,9 +568,9 @@ def get_products_links_Lamoda(item_name):
 
 
 def main():
-    #get_products_links_html_Ozon('наушники xiaomi') # 16.86 time.sleep(7) | 13.01 time.sleep(3) | 7.40 query optimization
-    #get_products_links_WB('наушники xiaomi') # 14.31 time.sleep(5) | 13.10 time.sleep(3) | 9.13 query optimization
-    get_products_links_YandexMarket('наушники xiaomi') # 19.83 time.sleep(4) | 18.38 time.sleep(3) | 13.15 query optimization
+    #get_products_links_html_Ozon('наушники xiaomi', user_id='12331224') # 16.86 time.sleep(7) | 13.01 time.sleep(3) | 7.40 query optimization
+    #get_products_links_WB('наушники xiaomi', user_id='12331224') # 14.31 time.sleep(5) | 13.10 time.sleep(3) | 9.13 query optimization
+    get_products_links_YandexMarket('наушники xiaomi', user_id='12331224') # 19.83 time.sleep(4) | 18.38 time.sleep(3) | 13.15 query optimization
     #get_products_links_MagnitMarket('наушники xiaomi') # 35.72 time.sleep(3) | 18.47 time.sleep(3) | 30.49 query optimization
     #get_products_links_DNS('наушники xiaomi') # 42.17 time.sleep(3) | 53.38 time.sleep(3)
     #get_products_links_Citilink('наушники xiaomi') # 19.88 time.sleep(3) | 16.72 time.sleep(3) | 9.55 query optimization
