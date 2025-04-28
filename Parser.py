@@ -9,6 +9,7 @@ import os
 import re
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
+from urllib.parse import urlparse, urlunparse
 import time
 from Storing_data_json import *
 
@@ -83,49 +84,50 @@ def get_products_data_Ozon(link_products, driver, user_id):
 
         except Exception as e:
             print(f"Ошибка получения рейтинга: {str(e)}")
-            return None
+            return None, None
 
     def get_product_images(driver):
         try:
-            gallery = WebDriverWait(driver, 15).until(
-                EC.visibility_of_element_located(
-                    (By.XPATH, "//div[@data-widget='webGallery']")
-                )
+            WebDriverWait(driver, 20).until(
+                EC.presence_of_element_located((By.XPATH, '//div[@data-widget="webGallery"]'))
             )
-            driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", gallery)
 
-            image_blocks = WebDriverWait(gallery, 10).until(
+            gallery = driver.find_element(By.XPATH, '//div[@data-widget="webGallery"]')
+            driver.execute_script("arguments[0].scrollIntoView();", gallery)
+
+            images = WebDriverWait(driver, 20).until(
                 EC.presence_of_all_elements_located(
-                    (By.XPATH, ".//div[contains(@class, 'm6k_28') and .//img[contains(@src, 'ir-')]]")
+                    (By.XPATH, '//div[@data-widget="webGallery"]//div[@data-index]//img')
                 )
             )
 
-            images = []
-            for block in image_blocks:
-                try:
-                    img = WebDriverWait(block, 5).until(
-                        EC.visibility_of_element_located(
-                            (By.XPATH, ".//img[contains(@src, 'ir-')]")
-                        )
-                    )
+            image_urls = set()
 
-                    src = img.get_attribute('src')
-                    if '/wc50/' in src:
-                        hd_src = src.replace('/wc50/', '/wc1000/')
-                    else:
-                        hd_src = src.split('?')[0]
+            for img in images:
+                src = img.get_attribute("src") or ""
+                srcset = img.get_attribute("srcset") or ""
 
-                    images.append(hd_src)
+                best_src = ""
+                if srcset:
+                    sources = [s.strip() for s in srcset.split(",")]
+                    sources.sort(key=lambda x: int(x.split()[-1][:-1]), reverse=True)
+                    best_src = sources[0].split()[0] if sources else ""
 
-                except Exception as e:
-                    print(f"Пропущен блок: {e}")
-                    continue
+                final_url = best_src if best_src else src
 
-            return list(set(images))
+                if final_url and "ir-8.ozone.ru/s3/" in final_url and "cover" not in final_url:
+                    if "wc100" in final_url:
+                        final_url = final_url.replace("wc100", "wc2000")
+                    elif "wc50" in final_url:
+                        final_url = final_url.replace("wc50", "wc2000")
+
+                    image_urls.add(final_url)
+
+            return list(image_urls)
 
         except Exception as e:
-            print(f"Ошибка парсинга галереи: {str(e)}")
-            return None
+            print(f"Ошибка парсинга изображений: {str(e)}")
+            return []
 
 
     article = get_product_article(driver)
@@ -133,17 +135,6 @@ def get_products_data_Ozon(link_products, driver, user_id):
     price = get_product_price(driver)
     rating, reviews = get_product_rating_reviews(driver)
     image_urls = get_product_images(driver)
-
-    # print(f'Артикул: {article.group(1)}')
-    # print(f'Заголовок товара: {title}')
-    # print(f'Цена товара: {price}')
-    # print(f'Рейтинг: {rating}')
-    # print(f'Отзывы: {reviews}')
-    #
-    # print(f"Найдено изображений: {len(image_urls)}")
-    # for i in range(len(image_urls)):
-    #     print(f'{i + 1}: {image_urls[i]}')
-
 
     if article and title and price and rating and reviews and image_urls != None:
         print(f'Артикул: {article.group(1)}')
@@ -156,7 +147,7 @@ def get_products_data_Ozon(link_products, driver, user_id):
         for i in range(len(image_urls)):
             print(f'{i + 1}: {image_urls[i]}')
 
-        Storing_data_Ozon(article.group(1), title, price, rating, reviews, image_urls[0], user_id)
+        Storing_data_Ozon(article.group(1), title, price, rating, reviews, image_urls, user_id)
     else:
         print(f'Этот товар не будет добавлен в json-файл')
 
@@ -229,7 +220,7 @@ def get_products_data_WB(link_products, driver, user_id):
 
         except Exception as e:
             print(f"Ошибка получения рейтинга: {str(e)}")
-            return None
+            return None, None
 
     def get_high_res_image_url(url):
         if '/c246x328/' in url:
@@ -269,19 +260,6 @@ def get_products_data_WB(link_products, driver, user_id):
     rating, reviews = get_product_rating_reviews(driver)
     image_urls = get_product_images(driver, article.group(1))
 
-    # if article != None:
-    #     print(f'Артикул: {article.group(1)}')
-    # else:
-    #     print(f'Артикул: {article}')
-    # print(f'Заголовок товара: {title}')
-    # print(f'Цена товара: {price}')
-    # print(f'Рейтинг: {rating}')
-    # print(f'Отзывы: {reviews}')
-    #
-    # print(f"Найдено изображений: {len(image_urls)}")
-    # for i in range(len(image_urls)):
-    #     print(f'{i + 1}: {image_urls[i]}')
-
     if article and title and price and rating and reviews and image_urls != None:
         print(f'Артикул: {article.group(1)}')
         print(f'Заголовок товара: {title}')
@@ -293,7 +271,7 @@ def get_products_data_WB(link_products, driver, user_id):
         for i in range(len(image_urls)):
             print(f'{i + 1}: {image_urls[i]}')
 
-        Storing_data_WB(article.group(1), title, price, rating, reviews, image_urls[0], user_id)
+        Storing_data_WB(article.group(1), title, price, rating, reviews, image_urls, user_id)
     else:
         print(f'Этот товар не будет добавлен в json-файл')
 
@@ -364,21 +342,26 @@ def get_products_data_YandexMarket(link_products, driver, user_id):
 
         except Exception as e:
             print(f"Ошибка при получении рейтинга или отзывов: {e}")
-            print(f'Этот товар не будет добавлен')
-            return None
+            return None, None
 
     def get_product_images(driver):
         try:
-            images = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located(
-                (By.XPATH, "//img[starts-with(@alt, 'Слайд ') and contains(@alt, ' с фото')]")
-            ))
+            thumbnails_list = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, "//ul[@data-auto='media-viewer-thumbnails']"))
+            )
 
-            #image_urls = [img.get_attribute('src') for img in images]
-            return [img.get_attribute('src') for img in images]
+            li_elements = thumbnails_list.find_elements(By.TAG_NAME, "li")
 
-            # print(f"Найдено изображений: {len(image_urls)}")
-            # for idx, url in enumerate(image_urls, 1):
-            #     print(f"Слайд {idx}: {url}")
+            image_urls = []
+            for li in li_elements:
+                img = WebDriverWait(li, 2).until(
+                    EC.presence_of_element_located((By.TAG_NAME, "img"))
+                )
+                src = img.get_attribute("src")
+                if src:
+                    image_urls.append(src)
+
+            return image_urls
 
         except Exception as e:
             print(f"Ошибка парсинга изображений: {str(e)}")
@@ -391,16 +374,6 @@ def get_products_data_YandexMarket(link_products, driver, user_id):
     rating, reviews = get_product_rating_reviews(driver)
     image_urls = get_product_images(driver)
 
-    # print(f'Артикул: {article}')
-    # print(f'Заголовок товара: {title}')
-    # print(f'Цена товара: {price}')
-    # print(f'Рейтинг: {rating}')
-    # print(f'Отзывы: {reviews}')
-    # print(f"Найдено изображений: {len(image_urls)}")
-    #
-    # for i in range(len(image_urls)):
-    #     print(f'{i + 1}: {image_urls[i]}')
-
     if article and title and price and rating and reviews and image_urls != None:
         print(f'Артикул: {article}')
         print(f'Заголовок товара: {title}')
@@ -412,7 +385,117 @@ def get_products_data_YandexMarket(link_products, driver, user_id):
         for i in range(len(image_urls)):
             print(f'{i + 1}: {image_urls[i]}')
 
-        Storing_data_YandexMarket(article, title, price, rating, reviews, image_urls[0], user_id)
+        Storing_data_YandexMarket(article, title, price, rating, reviews, image_urls, user_id)
+    else:
+        print(f'Этот товар не будет добавлен в json-файл')
+
+    print('-----------------------------')
+
+
+def get_products_data_MagnitMarket(link_products, driver, user_id):
+    print(f'Ссылка на товар:{link_products}')
+
+    def get_product_title(driver):
+        try:
+            product_name_element = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located(
+                    (By.CSS_SELECTOR, "h1[data-test-id='text__product-name']")
+                )
+            )
+
+            return product_name_element.text
+
+        except Exception as e:
+            print(f"Не удалось найти название товара: {str(e)}")
+            return None
+
+
+    def get_product_price(driver):
+        try:
+            price_element = driver.find_element(By.CSS_SELECTOR, '[data-test-id="text__product-price"]')
+
+            return price_element.text.replace(' ₽', '')
+
+        except Exception as e:
+            print(f"Ошибка при получении цены: {str(e)}")
+            return None
+
+
+    def get_product_rating_reviews(driver):
+        try:
+            rating_element = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located(
+                    (By.XPATH, "//span[@data-test-id='text__product-rating' and contains(@class, 'rating-value')]")
+                )
+            )
+
+            reviews_element = driver.find_element(
+                By.XPATH, '//span[@data-test-id="text__quantity-of-reviews"]'
+            )
+
+            rating = rating_element.text
+            reviews = reviews_element.text.strip().replace('(', '').replace(')','').replace(' отзыва', '').replace(' отзывов', '').replace(' отзыв', '')
+
+            return rating, reviews
+
+
+        except Exception as e:
+            print(f"Ошибка при получении рейтинга или отзывов: {e}")
+            return None, None
+
+
+    def get_product_images(driver):
+        try:
+            photos = WebDriverWait(driver, 10).until(
+                EC.presence_of_all_elements_located(
+                    (By.CSS_SELECTOR, "div[data-test-id='list__vertical-photo-carousel'] img")
+                )
+            )
+
+            image_urls = []
+            for img in photos:
+                src = img.get_attribute("src")
+                if not src:
+                    continue
+
+                # Парсим URL для обработки пути
+                parsed_url = urlparse(src)
+                path_parts = parsed_url.path.split('/')
+
+                if not path_parts:
+                    continue
+
+                path_parts[-1] = "original.jpg"
+                new_path = '/'.join(path_parts)
+
+                new_parsed = parsed_url._replace(path=new_path, query="", fragment="")
+                high_res_url = urlunparse(new_parsed)
+
+                image_urls.append(high_res_url)
+
+            return list(set(image_urls))
+
+        except Exception as e:
+            print(f"Ошибка парсинга изображений: {str(e)}")
+            return []
+
+
+    title = get_product_title(driver)
+    price = get_product_price(driver)
+    rating, reviews = get_product_rating_reviews(driver)
+    image_urls = get_product_images(driver)
+
+    if title and price and rating and reviews and image_urls != None:
+        print(f'Заголовок товара: {title}')
+        print(f'Цена товара: {price}')
+        print(f'Рейтинг: {rating}')
+        print(f'Отзывы: {reviews}')
+        print(f"Найдено изображений: {len(image_urls)}")
+
+        for i in range(len(image_urls)):
+            print(f'{i + 1}: {image_urls[i]}')
+
+        Storing_data_MagnitMarket(title, price, rating, reviews, image_urls, user_id)
     else:
         print(f'Этот товар не будет добавлен в json-файл')
 
