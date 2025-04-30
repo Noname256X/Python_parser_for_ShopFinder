@@ -148,7 +148,7 @@ def get_products_data_Ozon(link_products, driver, user_id):
         for i in range(len(image_urls)):
             print(f'{i + 1}: {image_urls[i]}')
 
-        Storing_data_Ozon(article.group(1), title, price, rating, reviews, image_urls, user_id)
+        Storing_data_Ozon(link_products, article.group(1), title, price, rating, reviews, image_urls, user_id)
     else:
         print(f'Этот товар не будет добавлен в json-файл')
 
@@ -272,7 +272,7 @@ def get_products_data_WB(link_products, driver, user_id):
         for i in range(len(image_urls)):
             print(f'{i + 1}: {image_urls[i]}')
 
-        Storing_data_WB(article.group(1), title, price, rating, reviews, image_urls, user_id)
+        Storing_data_WB(link_products, article.group(1), title, price, rating, reviews, image_urls, user_id)
     else:
         print(f'Этот товар не будет добавлен в json-файл')
 
@@ -386,7 +386,7 @@ def get_products_data_YandexMarket(link_products, driver, user_id):
         for i in range(len(image_urls)):
             print(f'{i + 1}: {image_urls[i]}')
 
-        Storing_data_YandexMarket(article, title, price, rating, reviews, image_urls, user_id)
+        Storing_data_YandexMarket(link_products, article, title, price, rating, reviews, image_urls, user_id)
     else:
         print(f'Этот товар не будет добавлен в json-файл')
 
@@ -496,7 +496,7 @@ def get_products_data_MagnitMarket(link_products, driver, user_id):
         for i in range(len(image_urls)):
             print(f'{i + 1}: {image_urls[i]}')
 
-        Storing_data_MagnitMarket(title, price, rating, reviews, image_urls, user_id)
+        Storing_data_MagnitMarket(link_products, title, price, rating, reviews, image_urls, user_id)
     else:
         print(f'Этот товар не будет добавлен в json-файл')
 
@@ -612,7 +612,7 @@ def get_products_data_DNS(link_products, driver, user_id):
         for i in range(len(image_urls)):
             print(f'{i + 1}: {image_urls[i]}')
 
-        Storing_data_DNS(article, title, price, rating, reviews, image_urls[0], user_id)
+        Storing_data_DNS(link_products, article, title, price, rating, reviews, image_urls[0], user_id)
     else:
         print(f'Этот товар не будет добавлен в json-файл')
 
@@ -742,7 +742,7 @@ def get_products_data_Citilink(link_products, driver, user_id):
         for i in range(len(image_urls)):
             print(f'{i + 1}: {image_urls[i]}')
 
-        Storing_data_Citilink(article, title, price, rating, reviews, image_urls, user_id)
+        Storing_data_Citilink(link_products, article, title, price, rating, reviews, image_urls, user_id)
     else:
         print(f'Этот товар не будет добавлен в json-файл')
 

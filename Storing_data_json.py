@@ -2,8 +2,9 @@ import json
 import os
 
 
-def Storing_data_Ozon(article, title, price, rating, reviews, image_urls, user_id):
+def Storing_data_Ozon(link_products, article, title, price, rating, reviews, image_urls, user_id):
     product_data = {
+        "link_products": link_products,
         "article": article,
         "title": title,
         "price": price,
@@ -28,8 +29,9 @@ def Storing_data_Ozon(article, title, price, rating, reviews, image_urls, user_i
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 
-def Storing_data_WB(article, title, price, rating, reviews, image_urls, user_id):
+def Storing_data_WB(link_products, article, title, price, rating, reviews, image_urls, user_id):
     product_data = {
+        "link_products": link_products,
         "article": article,
         "title": title,
         "price": price,
@@ -54,8 +56,9 @@ def Storing_data_WB(article, title, price, rating, reviews, image_urls, user_id)
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 
-def Storing_data_YandexMarket(article, title, price, rating, reviews, image_urls, user_id):
+def Storing_data_YandexMarket(link_products, article, title, price, rating, reviews, image_urls, user_id):
     product_data = {
+        "link_products": link_products,
         "article": article,
         "title": title,
         "price": price,
@@ -80,8 +83,9 @@ def Storing_data_YandexMarket(article, title, price, rating, reviews, image_urls
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 
-def Storing_data_MagnitMarket(title, price, rating, reviews, image_urls, user_id):
+def Storing_data_MagnitMarket(link_products, title, price, rating, reviews, image_urls, user_id):
     product_data = {
+        "link_products": link_products,
         "title": title,
         "price": price,
         "rating": rating,
@@ -105,8 +109,9 @@ def Storing_data_MagnitMarket(title, price, rating, reviews, image_urls, user_id
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 
-def Storing_data_DNS(article, title, price, rating, reviews, image_urls, user_id):
+def Storing_data_DNS(link_products, article, title, price, rating, reviews, image_urls, user_id):
     product_data = {
+        "link_products": link_products,
         "article": article,
         "title": title,
         "price": price,
@@ -131,8 +136,9 @@ def Storing_data_DNS(article, title, price, rating, reviews, image_urls, user_id
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 
-def Storing_data_Citilink(article, title, price, rating, reviews, image_urls, user_id):
+def Storing_data_Citilink(link_products, article, title, price, rating, reviews, image_urls, user_id):
     product_data = {
+        "link_products": link_products,
         "article": article,
         "title": title,
         "price": price,
