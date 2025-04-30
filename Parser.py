@@ -12,6 +12,7 @@ from urllib.parse import urljoin
 from urllib.parse import urlparse, urlunparse
 import time
 from Storing_data_json import *
+import random
 
 
 def get_products_data_Ozon(link_products, driver, user_id):
@@ -616,3 +617,134 @@ def get_products_data_DNS(link_products, driver, user_id):
         print(f'Этот товар не будет добавлен в json-файл')
 
     print('-----------------------------')
+
+
+def get_products_data_Citilink(link_products, driver, user_id):
+    print(f'Ссылка на товар:{link_products}')
+
+    def get_product_article(driver):
+        try:
+            article_element = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, '//span[contains(text(), "Код товара:")]//button'))
+            )
+
+            return article_element.text
+
+        except Exception as e:
+            print(f"Не удалось найти артикул: {str(e)}")
+            return None
+
+
+    def get_product_title(driver):
+        try:
+            title_element = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.TAG_NAME, 'h1'))
+            )
+
+            return title_element.text
+
+        except Exception as e:
+            print(f"Не удалось найти название товара: {str(e)}")
+            return None
+
+
+    def get_product_price(driver):
+        try:
+            price_element = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, '//span[contains(@class, "MainPriceNumber")]'))
+            )
+
+            price = int(price_element.text)
+
+            if price >= 1000:
+                return f"{price:,}".replace(",", " ")
+            return str(price)
+
+        except Exception as e:
+            print(f"Ошибка при получении цены: {str(e)}")
+            return None
+
+
+    def get_product_rating_reviews(driver):
+        try:
+            rating_element = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH,
+                                                "//*[contains(text(), 'Рейтинг товара')]/following::span[contains(@class, 'StyledTypography')]"))
+            )
+
+            rating = rating_element.text
+
+            reviews_tab = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, "//a[contains(@href, 'otzyvy')]"))
+            )
+
+            reviews_count = reviews_tab.find_element(
+                By.XPATH, ".//span[contains(@class, 'CountWrapper')]"
+            )
+
+            reviews = reviews_count.text
+
+            return rating, reviews
+
+        except Exception as e:
+            print(f"Ошибка при получении рейтинга или отзывов: {e}")
+            return None, None
+
+    def get_product_images(driver): #Доработать (парсится 1 картинка товара)
+        try:
+            main_image = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, "div.is-selected[data-meta-id^='GallerySlide']"))
+            )
+            main_image.click()
+
+            image_urls = []
+
+            large_image = WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located(
+                    (By.CSS_SELECTOR, "div.app-catalog-jeajt7-StyledImageWrapper img"))
+            )
+            current_url = large_image.get_attribute("src")
+
+            image_urls.append(current_url)
+
+            return image_urls
+
+        except Exception as e:
+            print(f"Ошибка при получении изображений: {str(e)}")
+            return []
+
+
+    article = get_product_article(driver)
+    title = get_product_title(driver)
+    price = get_product_price(driver)
+    rating, reviews = get_product_rating_reviews(driver)
+    image_urls = get_product_images(driver)
+
+    # print(f'Артикул: {article}')
+    # print(f'Заголовок товара: {title}')
+    # print(f'Цена товара: {price}')
+    # print(f'Рейтинг: {rating}')
+    # print(f'Отзывы: {reviews}')
+    # print(f"Найдено изображений: {len(image_urls)}")
+    #
+    # for i in range(len(image_urls)):
+    #     print(f'{i + 1}: {image_urls[i]}')
+
+
+    if article and title and price and rating and reviews and image_urls != None:
+        print(f'Артикул: {article}')
+        print(f'Заголовок товара: {title}')
+        print(f'Цена товара: {price}')
+        print(f'Рейтинг: {rating}')
+        print(f'Отзывы: {reviews}')
+        print(f"Найдено изображений: {len(image_urls)}")
+
+        for i in range(len(image_urls)):
+            print(f'{i + 1}: {image_urls[i]}')
+
+        Storing_data_Citilink(article, title, price, rating, reviews, image_urls, user_id)
+    else:
+        print(f'Этот товар не будет добавлен в json-файл')
+
+    print('-----------------------------')
+

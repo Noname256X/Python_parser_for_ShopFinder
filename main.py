@@ -331,7 +331,7 @@ def get_products_links_DNS(item_name, user_id):
         print('-----------------------------')
 
 
-def get_products_links_Citilink(item_name):
+def get_products_links_Citilink(item_name, user_id): # Дописать парсинг картинок
     driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
@@ -349,12 +349,39 @@ def get_products_links_Citilink(item_name):
 
         product_urls = list(product_urls)
 
-        if product_urls:
-            with open('links to json products/products_urls_citilink.json', 'w', encoding='utf-8') as file:
-                json.dump(product_urls, file, indent=4, ensure_ascii=False)
-            print(f'[+] Ссылки на товары Citilink сохранены в файл!')
-        else:
-            print('[!] Не удалось собрать ссылки на товары Citilink.')
+        count = 0
+        for product_url in product_urls:
+            if not product_url: continue
+
+            try:
+                driver.get(product_url)
+                time.sleep(3)
+
+                print('-------')
+                print(f'Обработка: {count + 1}/{len(product_urls)}')
+                print('-------')
+
+                get_products_data_Citilink(product_url, driver=driver, user_id=user_id)
+                count += 1
+            except Exception as e:
+                print(f'Ошибка обработки {product_url}: {str(e)}')
+                print('-----------------------------')
+
+        print('----')
+        print('Данные о товарах упакованы в json')
+        # отправка json результата на REST_API
+
+        # удаление json-файла на сервере
+        file_path = f"json products data/{user_id}-Citilink.json"
+        try:
+            os.remove(file_path)
+            print(f"Файл '{file_path}' успешно удален.")
+        except FileNotFoundError:
+            print(f"Файл '{file_path}' не найден.")
+        except PermissionError:
+            print(f"У вас нет прав для удаления файла '{file_path}'.")
+        except Exception as e:
+            print(f"Произошла ошибка: {e}")
 
     finally:
         driver.quit()
@@ -716,8 +743,8 @@ def main():
     #get_products_links_WB('наушники xiaomi', user_id='12331224') # 14.31 time.sleep(5) | 13.10 time.sleep(3) | 9.13 query optimization
     #get_products_links_YandexMarket('наушники xiaomi', user_id='12331224') # 19.83 time.sleep(4) | 18.38 time.sleep(3) | 13.15 query optimization
     #get_products_links_MagnitMarket('наушники xiaomi', user_id='12331224')  #35.72 time.sleep(3) | 18.47 time.sleep(3) | 30.49 query optimization
-    get_products_links_DNS('наушники xiaomi', user_id='12331224') # 42.17 time.sleep(3) | 53.38 time.sleep(3)
-    #get_products_links_Citilink('наушники xiaomi') # 19.88 time.sleep(3) | 16.72 time.sleep(3) | 9.55 query optimization
+    #get_products_links_DNS('наушники xiaomi', user_id='12331224') # 42.17 time.sleep(3) | 53.38 time.sleep(3)
+    get_products_links_Citilink('наушники xiaomi', user_id='12331224') # 19.88 time.sleep(3) | 16.72 time.sleep(3) | 9.55 query optimization
     #get_products_links_M_Video('наушники xiaomi') # 14.69 time.sleep(3) | 14.53 time.sleep(3) | 9.62 query optimization
     #get_products_links_Avito('наушники xiaomi') # 95.88 time.sleep(3) | 96.14 time.sleep(3)
     #get_products_links_Youla('наушники xiaomi') # 20.92 time.sleep(3) | 17.54 time.sleep(3)
