@@ -976,6 +976,7 @@ def get_products_data_Aliexpress(link_products, driver, user_id):
         print(f'Этот товар не будет добавлен в json-файл')
 
 
+
 def get_products_data_Joom(link_products, driver, user_id):
     print(f'Ссылка на товар:{link_products}')
 

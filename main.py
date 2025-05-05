@@ -885,6 +885,8 @@ def main():
     #get_products_links_Youla('наушники xiaomi', user_id='12331224') # 20.92 time.sleep(3) | 17.54 time.sleep(3)
     #get_products_links_Aliexpress('наушники xiaomi', user_id='12331224') # 23.63 time.sleep(7) | 19.37 time.sleep(3) | 19.95 query optimization
     get_products_links_Joom('наушники xiaomi', user_id='12331224') # 18.28 time.sleep(7) | 15.63 time.sleep(3) | 9.49 query optimization
+    get_products_links_Aliexpress('наушники xiaomi', user_id='12331224') # 23.63 time.sleep(7) | 19.37 time.sleep(3) | 19.95 query optimization
+    #get_products_links_Joom('наушники xiaomi', user_id='12331224') # 18.28 time.sleep(7) | 15.63 time.sleep(3) | 9.49 query optimization
     #get_products_links_PochtaMarket('наушники xiaomi', user_id='12331224') # 9.86 no time.sleep() | 8.82 no time.sleep()
     #get_products_links_MegaMarket('наушники xiaomi', user_id='12331224') # 56.33 time.sleep(7) | 58.16 time.sleep(3) | 50.78 query optimization
     #get_products_links_Shop_mts('наушники xiaomi', user_id='12331224') # 30.15 time.sleep(7) | 28.37 time.sleep(3) | 12.60 query optimization
