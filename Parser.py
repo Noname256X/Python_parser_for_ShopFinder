@@ -5,7 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException
+from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException, TimeoutException
 import os
 import re
 from bs4 import BeautifulSoup
@@ -975,6 +975,7 @@ def get_products_data_Aliexpress(link_products, driver, user_id):
     else:
         print(f'Этот товар не будет добавлен в json-файл')
 
+    print('-----------------------------')
 
 
 def get_products_data_Joom(link_products, driver, user_id):
@@ -1072,15 +1073,6 @@ def get_products_data_Joom(link_products, driver, user_id):
     rating, reviews = get_product_rating_reviews(driver)
     image_urls = get_product_images(driver)
 
-    # print(f'Заголовок товара: {title}')
-    # print(f'Цена товара: {price}')
-    # print(f'Рейтинг: {rating}')
-    # print(f'Отзывы: {reviews}')
-    # print(f"Найдено изображений: {len(image_urls)}")
-    #
-    # for i in range(len(image_urls)):
-    #     print(f'{i + 1}: {image_urls[i]}')
-
     if title and price and rating and reviews:
         print(f'Заголовок товара: {title}')
         print(f'Цена товара: {price}')
@@ -1094,5 +1086,153 @@ def get_products_data_Joom(link_products, driver, user_id):
         Storing_data_Joom(link_products, title, price, rating, reviews, image_urls, user_id)
     else:
         print(f'Этот товар не будет добавлен в json-файл')
+
+    print('-----------------------------')
+
+
+def get_products_data_Shop_mts(link_products, driver, user_id):
+    print(f'Ссылка на товар:{link_products}')
+
+    def get_product_article(driver):
+        try:
+            article_element = driver.find_element(
+                By.XPATH,
+                "//span[contains(text(), 'Артикул: ')]"
+            )
+
+            article = article_element.text.split(': ')[1]
+            return article
+
+        except Exception as e:
+            print(f"Ошибка при поиске артикула: {str(e)}")
+            return None
+
+
+    def get_product_title(driver):
+        try:
+            title_element = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, "//h2"))
+            )
+
+            title = title_element.text.strip()
+            return title
+
+        except Exception as e:
+            print(f"Не удалось найти название товара: {str(e)}")
+            return None
+
+
+    def get_product_price(driver):
+        try:
+            out_of_stock = driver.find_element(By.CLASS_NAME, 'out-of-stock-block__text')
+
+            return "Товара нет в наличии"
+
+        except:
+            try:
+
+                price_element = WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located(
+                        (By.XPATH, "//span[contains(., '₽') and contains(., ' ')]")
+                    )
+                )
+
+                price_text = price_element.text
+
+                match = re.search(r'([\d\s]+)\s*₽', price_text)
+                if match:
+                    price = match.group(1).replace('\xa0', '').replace(' ', '').strip()
+                    return price
+
+            except Exception as e:
+                print(f"Ошибка при получении цены: {str(e)}")
+                return None
+
+
+    def get_product_rating_reviews(driver):
+        try:
+            rating_element = WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located(
+                    (By.CSS_SELECTOR, "span[class*='assessment'][class*='text']")
+                )
+            )
+            rating = rating_element.text.replace(',', '.')
+
+            assessment_block = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, "//*[contains(@class, 'assessment-product__comments')]"))
+            )
+
+            review_count_element = assessment_block.find_element(By.XPATH, ".//span[contains(@class, 'assessment-product__text')]")
+
+            reviews = review_count_element.text.strip()
+
+            if rating == "Без оценки" or reviews == "0":
+                return None, None
+            else:
+                return rating, reviews
+
+        except Exception as e:
+            print(f"Ошибка при получении рейтинга или отзывов: {e}")
+            return None, None
+
+
+    def get_product_images(driver):
+        try:
+            gallery_items = WebDriverWait(driver, 10).until(
+                EC.presence_of_all_elements_located((By.CSS_SELECTOR, 'div[class*="product-gallery-preview__item"]'))
+            )
+
+            image_urls = []
+            for item in gallery_items:
+                img = item.find_element(By.CSS_SELECTOR, 'img.product-gallery-item__preview-image')
+                url = img.get_attribute('data-src') or img.get_attribute('src')
+                if url:
+                    # Убираем параметр изменения размера из URL
+                    original_url = url.split('/resize')[0]
+                    image_urls.append(original_url)
+
+            return image_urls
+
+        except Exception as e:
+            print(f"Ошибка при получении изображений: {str(e)}")
+            return []
+
+
+    article = get_product_article(driver)
+    title = get_product_title(driver)
+    price = get_product_price(driver)
+    rating, reviews = get_product_rating_reviews(driver)
+    image_urls = get_product_images(driver)
+
+    # print(f'Артикул: {article}')
+    # print(f'Заголовок товара: {title}')
+    # print(f'Цена товара: {price}')
+    # print(f'Рейтинг: {rating}')
+    # print(f'Отзывы: {reviews}')
+    # print(f"Найдено изображений: {len(image_urls)}")
+    # for i in range(len(image_urls)):
+    #     print(f'{i + 1}: {image_urls[i]}')
+
+
+    if price == "Товара нет в наличии":
+        print(f'Этот товар не будет добавлен: {price}')
+    else:
+        if article and title and price and rating and reviews:
+            print(f'Артикул: {article}')
+            print(f'Заголовок товара: {title}')
+            print(f'Цена товара: {price}')
+            print(f'Рейтинг: {rating}')
+            print(f'Отзывы: {reviews}')
+            print(f"Найдено изображений: {len(image_urls)}")
+
+            for i in range(len(image_urls)):
+                print(f'{i + 1}: {image_urls[i]}')
+
+            Storing_data_Shop_mts(link_products, article, title, price, rating, reviews, image_urls, user_id)
+        else:
+            print(f'Этот товар не будет добавлен в json-файл')
+
+    print('-----------------------------')
+
 
 
