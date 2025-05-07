@@ -760,7 +760,7 @@ def get_products_links_Shop_mts(item_name, user_id):
         print('-----------------------------')
 
 
-def get_products_links_Technopark(item_name):
+def get_products_links_Technopark(item_name, user_id):
     driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
@@ -778,12 +778,39 @@ def get_products_links_Technopark(item_name):
 
         product_urls = list(product_urls)
 
-        if product_urls:
-            with open('links to json products/products_urls_technopark.json', 'w', encoding='utf-8') as file:
-                json.dump(product_urls, file, indent=4, ensure_ascii=False)
-            print(f'[+] Ссылки на товары Technopark сохранены в файл!')
-        else:
-            print('[!] Не удалось собрать ссылки на товары Technopark.')
+        count = 0
+        for product_url in product_urls:
+            if not product_url: continue
+
+            try:
+                driver.get(product_url)
+                time.sleep(3)
+
+                print('-------')
+                print(f'Обработка: {count + 1}/{len(product_urls)}')
+                print('-------')
+
+                get_products_data_Technopark(product_url, driver=driver, user_id=user_id)
+                count += 1
+            except Exception as e:
+                print(f'Ошибка обработки {product_url}: {str(e)}')
+                print('-----------------------------')
+
+        print('----')
+        print('Данные о товарах упакованы в json')
+        # отправка json результата на REST_API
+
+        # удаление json-файла на сервере
+        file_path = f"json products data/{user_id}-Technopark.json"
+        try:
+            os.remove(file_path)
+            print(f"Файл '{file_path}' успешно удален.")
+        except FileNotFoundError:
+            print(f"Файл '{file_path}' не найден.")
+        except PermissionError:
+            print(f"У вас нет прав для удаления файла '{file_path}'.")
+        except Exception as e:
+            print(f"Произошла ошибка: {e}")
 
 
     finally:
@@ -836,8 +863,8 @@ def main():
     #get_products_links_Youla('наушники xiaomi', user_id='12331224') # 20.92 time.sleep(3) | 17.54 time.sleep(3)
     #get_products_links_Aliexpress('наушники xiaomi', user_id='12331224') # 23.63 time.sleep(7) | 19.37 time.sleep(3) | 19.95 query optimization
     #get_products_links_Joom('наушники xiaomi', user_id='12331224') # 18.28 time.sleep(7) | 15.63 time.sleep(3) | 9.49 query optimization
-    get_products_links_Shop_mts('наушники xiaomi', user_id='12331224') # 30.15 time.sleep(7) | 28.37 time.sleep(3) | 12.60 query optimization
-    #get_products_links_Technopark('наушники xiaomi', user_id='12331224') # 40.60 time.sleep(7) | 38.19 time.sleep(3) | 31.43 query optimization
+    #get_products_links_Shop_mts('наушники xiaomi', user_id='12331224') # 30.15 time.sleep(7) | 28.37 time.sleep(3) | 12.60 query optimization
+    get_products_links_Technopark('наушники xiaomi', user_id='12331224') # 40.60 time.sleep(7) | 38.19 time.sleep(3) | 31.43 query optimization
     #get_products_links_Lamoda('кроссовки nike', user_id='12331224') # 21.49 time.sleep(7) | 16.93 time.sleep(3) | 32.77 query optimization
 
 

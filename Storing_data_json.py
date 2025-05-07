@@ -275,8 +275,31 @@ def Storing_data_Shop_mts(link_products, article, title, price, rating, reviews,
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 
+def Storing_data_Technopark(link_products, article, title, price, rating, reviews, image_urls, user_id):
+    product_data = {
+        "link_products": link_products,
+        "article": article,
+        "title": title,
+        "price": price,
+        "rating": rating,
+        "reviews": reviews,
+        "image_urls": image_urls
+    }
 
+    filename = f"json products data/{user_id}-Technopark.json"
+    data = []
 
+    if os.path.exists(filename):
+        with open(filename, "r", encoding="utf-8") as file:
+            try:
+                data = json.load(file)
+            except json.JSONDecodeError:
+                data = []
+
+    data.append(product_data)
+
+    with open(filename, "w", encoding="utf-8") as file:
+        json.dump(data, file, ensure_ascii=False, indent=4)
 
 
 

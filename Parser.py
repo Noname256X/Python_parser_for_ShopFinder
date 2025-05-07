@@ -1204,16 +1204,6 @@ def get_products_data_Shop_mts(link_products, driver, user_id):
     rating, reviews = get_product_rating_reviews(driver)
     image_urls = get_product_images(driver)
 
-    # print(f'Артикул: {article}')
-    # print(f'Заголовок товара: {title}')
-    # print(f'Цена товара: {price}')
-    # print(f'Рейтинг: {rating}')
-    # print(f'Отзывы: {reviews}')
-    # print(f"Найдено изображений: {len(image_urls)}")
-    # for i in range(len(image_urls)):
-    #     print(f'{i + 1}: {image_urls[i]}')
-
-
     if price == "Товара нет в наличии":
         print(f'Этот товар не будет добавлен: {price}')
     else:
@@ -1235,4 +1225,123 @@ def get_products_data_Shop_mts(link_products, driver, user_id):
     print('-----------------------------')
 
 
+def get_products_data_Technopark(link_products, driver, user_id):
+    print(f'Ссылка на товар:{link_products}')
 
+    def get_product_article(driver):
+        try:
+            article_element = WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, '//span[@class="copy-clipboard-button__content"]'))
+            )
+
+            return article_element.text
+
+        except Exception as e:
+            print(f"Ошибка при поиске артикула: {str(e)}")
+            return None
+
+
+    def get_product_title(driver):
+        try:
+            title_element = WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, "//h1[@itemprop='name']"))
+            )
+
+            return title_element.text
+
+        except Exception as e:
+            print(f"Не удалось найти название товара: {str(e)}")
+            return None
+
+
+    def get_product_price(driver):
+        try:
+            price_element = WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, '//div[contains(@class, "product-page-purchase")]//div[contains(@class, "product-prices-new__values")]'))
+            )
+
+            return price_element.text.strip().replace('\xa0', ' ').replace(' ₽', '')
+
+        except Exception as e:
+            print(f"Ошибка при получении цены: {str(e)}")
+            return None
+
+
+    def get_product_rating_reviews(driver):
+        try:
+            rating_element = WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, "//a[contains(@href, 'otzyvy')]//div[contains(@class, 'product-rating-review')]/div[1]/div[2]"))
+            )
+
+            rating = rating_element.text.strip()
+
+            reviews_element = driver.find_element(
+                By.XPATH,
+                "//a[contains(@href, 'otzyvy')]//div[contains(., 'отзыв')]"
+            )
+
+            reviews = reviews_element.text.split()
+
+            return rating, reviews[1]
+
+        except Exception as e:
+            print(f"Ошибка при получении рейтинга или отзывов: {e}")
+            return None, None
+
+
+    def get_product_images(driver):
+        try:
+            thumbnails = WebDriverWait(driver, 20).until(
+                EC.presence_of_all_elements_located(
+                (By.CSS_SELECTOR, "div.product-page-gallery-thumbnails__thumbnail")
+            ))
+
+            image_urls = []
+            for thumbnail in thumbnails:
+                img = thumbnail.find_element(By.TAG_NAME, "img")
+                image_url = img.get_attribute("src")
+                if image_url not in image_urls:
+                    image_urls.append(image_url)
+
+            return image_urls
+
+        except Exception as e:
+            print(f"Ошибка при получении изображений: {str(e)}")
+            return []
+
+
+    article = get_product_article(driver)
+    title = get_product_title(driver)
+    price = get_product_price(driver)
+    rating, reviews = get_product_rating_reviews(driver)
+    image_urls = get_product_images(driver)
+
+    # print(f'Артикул: {article}')
+    # print(f'Заголовок товара: {title}')
+    # print(f'Цена товара: {price}')
+    # print(f'Рейтинг: {rating}')
+    # print(f'Отзывы: {reviews}')
+    # print(f"Найдено изображений: {len(image_urls)}")
+    # for i in range(len(image_urls)):
+    #     print(f'{i + 1}: {image_urls[i]}')
+
+    if article and title and price and rating and reviews:
+        print(f'Артикул: {article}')
+        print(f'Заголовок товара: {title}')
+        print(f'Цена товара: {price}')
+        print(f'Рейтинг: {rating}')
+        print(f'Отзывы: {reviews}')
+        print(f"Найдено изображений: {len(image_urls)}")
+
+        for i in range(len(image_urls)):
+            print(f'{i + 1}: {image_urls[i]}')
+
+        Storing_data_Technopark(link_products, article, title, price, rating, reviews, image_urls, user_id)
+    else:
+        print(f'Этот товар не будет добавлен в json-файл')
+
+    print('-----------------------------')
