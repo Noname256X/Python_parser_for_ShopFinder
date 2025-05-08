@@ -1187,7 +1187,6 @@ def get_products_data_Shop_mts(link_products, driver, user_id):
                 img = item.find_element(By.CSS_SELECTOR, 'img.product-gallery-item__preview-image')
                 url = img.get_attribute('data-src') or img.get_attribute('src')
                 if url:
-                    # Убираем параметр изменения размера из URL
                     original_url = url.split('/resize')[0]
                     image_urls.append(original_url)
 
@@ -1320,15 +1319,6 @@ def get_products_data_Technopark(link_products, driver, user_id):
     rating, reviews = get_product_rating_reviews(driver)
     image_urls = get_product_images(driver)
 
-    # print(f'Артикул: {article}')
-    # print(f'Заголовок товара: {title}')
-    # print(f'Цена товара: {price}')
-    # print(f'Рейтинг: {rating}')
-    # print(f'Отзывы: {reviews}')
-    # print(f"Найдено изображений: {len(image_urls)}")
-    # for i in range(len(image_urls)):
-    #     print(f'{i + 1}: {image_urls[i]}')
-
     if article and title and price and rating and reviews:
         print(f'Артикул: {article}')
         print(f'Заголовок товара: {title}')
@@ -1341,6 +1331,135 @@ def get_products_data_Technopark(link_products, driver, user_id):
             print(f'{i + 1}: {image_urls[i]}')
 
         Storing_data_Technopark(link_products, article, title, price, rating, reviews, image_urls, user_id)
+    else:
+        print(f'Этот товар не будет добавлен в json-файл')
+
+    print('-----------------------------')
+
+
+def get_products_data_Lamoda(link_products, driver, user_id):
+    print(f'Ссылка на товар:{link_products}')
+
+    def get_product_article(driver):
+        try:
+            article_element = WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, '//span[contains(text(), "Артикул")]/../following-sibling::span'))
+            )
+
+            return article_element.text.strip()
+
+        except Exception as e:
+            print(f"Ошибка при поиске артикула: {str(e)}")
+            return None
+
+
+    def get_product_title(driver):
+        try:
+            title_element = WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, '//div[contains(@class, "_aside_")]//div[@class="_modelName_mnqvr_21"]')
+                )
+            )
+
+            return title_element.text
+
+        except Exception as e:
+            print(f"Не удалось найти название товара: {str(e)}")
+            return None
+
+
+    def get_product_price(driver):
+        try:
+            price_element = WebDriverWait(driver, 20).until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, '//span[@aria-label="Итоговая цена"]')
+                )
+            )
+
+            return price_element.text
+
+        except Exception as e:
+            print(f"Ошибка при получении цены: {str(e)}")
+            return None
+
+
+    def get_product_rating_reviews(driver):
+        try:
+            element = WebDriverWait(driver, 20).until(
+                EC.element_to_be_clickable(
+                    (By.XPATH, "//span[@aria-label='Отзывы' and contains(@class, 'ui-product-page-reviews-tab')]")
+                )
+            )
+            element.click()
+            time.sleep(5)
+
+            reviews_section = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, "//div[@id='reviews-and-questions']"))
+            )
+
+            rating_element = reviews_section.find_element(By.XPATH, ".//div[contains(@class, '_ratingValueScore_')]")
+            rating = rating_element.text
+
+            reviews_element = WebDriverWait(driver, 20).until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, '//div[contains(@class, "_count_") and contains(@class, "_counter_")]/span[contains(text(), "отзыв")]/..')
+                )
+            )
+
+            reviews_text = reviews_element.text
+            reviews = int(reviews_text.split()[0])
+
+            return rating, reviews
+
+        except Exception as e:
+            print(f"Ошибка при получении рейтинга или отзывов: {e}")
+            return None, None
+
+
+    def get_product_images(driver):
+        try:
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, "//div[contains(@class, 'ui-product-page-gallery')]"))
+            )
+
+            image_urls = []
+
+            galleries = driver.find_elements(By.XPATH, "//div[contains(@class, 'ui-product-page-gallery')]")
+            for gallery in galleries:
+                imgs = gallery.find_elements(By.TAG_NAME, 'img')
+                for img in imgs:
+                    src = img.get_attribute('src')
+                    if src and 'lmcdn.ru' in src:
+                        if src.startswith('//'):
+                            src = f'https:{src}'
+                        image_urls.append(src)
+
+            return image_urls
+
+        except Exception as e:
+            print(f"Ошибка при получении изображений: {str(e)}")
+            return []
+
+
+    article = get_product_article(driver)
+    title = get_product_title(driver)
+    price = get_product_price(driver)
+    rating, reviews = get_product_rating_reviews(driver)
+    image_urls = get_product_images(driver)
+
+    if article and title and price and rating and reviews:
+        print(f'Артикул: {article}')
+        print(f'Заголовок товара: {title}')
+        print(f'Цена товара: {price}')
+        print(f'Рейтинг: {rating}')
+        print(f'Отзывы: {reviews}')
+        print(f"Найдено изображений: {len(image_urls)}")
+
+        for i in range(len(image_urls)):
+            print(f'{i + 1}: {image_urls[i]}')
+
+        Storing_data_Lamoda(link_products, article, title, price, rating, reviews, image_urls, user_id)
     else:
         print(f'Этот товар не будет добавлен в json-файл')
 
