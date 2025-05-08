@@ -14,7 +14,6 @@ from urllib.parse import urlparse, urlunparse
 import time
 from Storing_data_json import *
 import random
-from dotenv import load_dotenv
 
 
 def get_products_data_Ozon(link_products, driver, user_id):
@@ -87,7 +86,7 @@ def get_products_data_Ozon(link_products, driver, user_id):
 
         except Exception as e:
             print(f"Ошибка получения рейтинга: {str(e)}")
-            return None, None
+            return 0, 0
 
     def get_product_images(driver):
         try:
@@ -139,7 +138,7 @@ def get_products_data_Ozon(link_products, driver, user_id):
     rating, reviews = get_product_rating_reviews(driver)
     image_urls = get_product_images(driver)
 
-    if article and title and price and rating and reviews and image_urls != None:
+    if article and title and price != None:
         print(f'Артикул: {article.group(1)}')
         print(f'Заголовок товара: {title}')
         print(f'Цена товара: {price}')
@@ -223,7 +222,7 @@ def get_products_data_WB(link_products, driver, user_id):
 
         except Exception as e:
             print(f"Ошибка получения рейтинга: {str(e)}")
-            return None, None
+            return 0, 0
 
     def get_high_res_image_url(url):
         if '/c246x328/' in url:
@@ -263,7 +262,7 @@ def get_products_data_WB(link_products, driver, user_id):
     rating, reviews = get_product_rating_reviews(driver)
     image_urls = get_product_images(driver, article.group(1))
 
-    if article and title and price and rating and reviews and image_urls != None:
+    if article and title and price != None:
         print(f'Артикул: {article.group(1)}')
         print(f'Заголовок товара: {title}')
         print(f'Цена товара: {price}')
@@ -345,7 +344,7 @@ def get_products_data_YandexMarket(link_products, driver, user_id):
 
         except Exception as e:
             print(f"Ошибка при получении рейтинга или отзывов: {e}")
-            return None, None
+            return 0, 0
 
     def get_product_images(driver):
         try:
@@ -377,7 +376,7 @@ def get_products_data_YandexMarket(link_products, driver, user_id):
     rating, reviews = get_product_rating_reviews(driver)
     image_urls = get_product_images(driver)
 
-    if article and title and price and rating and reviews and image_urls != None:
+    if article and title and price != None:
         print(f'Артикул: {article}')
         print(f'Заголовок товара: {title}')
         print(f'Цена товара: {price}')
@@ -444,7 +443,7 @@ def get_products_data_MagnitMarket(link_products, driver, user_id):
 
         except Exception as e:
             print(f"Ошибка при получении рейтинга или отзывов: {e}")
-            return None, None
+            return 0, 0
 
 
     def get_product_images(driver):
@@ -488,7 +487,7 @@ def get_products_data_MagnitMarket(link_products, driver, user_id):
     rating, reviews = get_product_rating_reviews(driver)
     image_urls = get_product_images(driver)
 
-    if title and price and rating and reviews and image_urls != None:
+    if title and price != None:
         print(f'Заголовок товара: {title}')
         print(f'Цена товара: {price}')
         print(f'Рейтинг: {rating}')
@@ -573,7 +572,7 @@ def get_products_data_DNS(link_products, driver, user_id):
 
         except Exception as e:
             print(f"Ошибка при получении рейтинга или отзывов: {e}")
-            return None, None
+            return 0, 0
 
 
     def get_product_images(driver): # Пересмотреть решение
@@ -604,7 +603,7 @@ def get_products_data_DNS(link_products, driver, user_id):
     rating, reviews = get_product_rating_reviews(driver)
     image_urls = get_product_images(driver)
 
-    if title and price and rating and reviews and image_urls != None:
+    if title and price != None:
         print(f'Заголовок товара: {title}')
         print(f'Цена товара: {price}')
         print(f'Рейтинг: {rating}')
@@ -690,7 +689,7 @@ def get_products_data_Citilink(link_products, driver, user_id):
 
         except Exception as e:
             print(f"Ошибка при получении рейтинга или отзывов: {e}")
-            return None, None
+            return 0, 0
 
 
     def get_product_images(driver): #Доработать (парсится 1 картинка товара)
@@ -723,7 +722,7 @@ def get_products_data_Citilink(link_products, driver, user_id):
     rating, reviews = get_product_rating_reviews(driver)
     image_urls = get_product_images(driver)
 
-    if article and title and price and rating and reviews and image_urls != None:
+    if article and title and price != None:
         print(f'Артикул: {article}')
         print(f'Заголовок товара: {title}')
         print(f'Цена товара: {price}')
@@ -815,7 +814,7 @@ def get_products_data_M_Video(link_products, driver, user_id):
 
         except Exception as e:
             print(f"Ошибка при получении рейтинга или отзывов: {e}")
-            return None, None
+            return 0, 0
 
 
     def get_product_images(driver):
@@ -849,7 +848,7 @@ def get_products_data_M_Video(link_products, driver, user_id):
     rating, reviews = get_product_rating_reviews(driver)
     image_urls = get_product_images(driver)
 
-    if article and title and price and rating and reviews and image_urls != None:
+    if article and title and price != None:
         print(f'Артикул: {article}')
         print(f'Заголовок товара: {title}')
         print(f'Цена товара: {price}')
@@ -916,7 +915,7 @@ def get_products_data_Aliexpress(link_products, driver, user_id):
                 )
             )
 
-            rating = rating_element.text
+            rating = rating_element.text.replace(',','.')
 
             reviews_element = driver.find_element(
                 By.XPATH,
@@ -930,7 +929,7 @@ def get_products_data_Aliexpress(link_products, driver, user_id):
 
         except Exception as e:
             print(f"Ошибка при получении рейтинга или отзывов: {e}")
-            return None, None
+            return 0, 0
 
 
     def get_product_images(driver):
@@ -961,7 +960,7 @@ def get_products_data_Aliexpress(link_products, driver, user_id):
     rating, reviews = get_product_rating_reviews(driver)
     image_urls = get_product_images(driver)
 
-    if title and price and rating and reviews and image_urls != None:
+    if title and price != None:
         print(f'Заголовок товара: {title}')
         print(f'Цена товара: {price}')
         print(f'Рейтинг: {rating}')
@@ -1021,7 +1020,7 @@ def get_products_data_Joom(link_products, driver, user_id):
                 EC.visibility_of_element_located((By.XPATH, '//h3[contains(., "Отзывы")]/following-sibling::div//div[contains(@class, "label___")]'))
             )
 
-            rating = rating_element.text
+            rating = rating_element.text.replace(',','.')
 
             reviews_count_element = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located(
@@ -1035,7 +1034,7 @@ def get_products_data_Joom(link_products, driver, user_id):
 
         except Exception as e:
             print(f"Ошибка при получении рейтинга или отзывов: {e}")
-            return None, None
+            return 0, 0
 
 
     def get_product_images(driver):
@@ -1073,7 +1072,7 @@ def get_products_data_Joom(link_products, driver, user_id):
     rating, reviews = get_product_rating_reviews(driver)
     image_urls = get_product_images(driver)
 
-    if title and price and rating and reviews:
+    if title and price != None:
         print(f'Заголовок товара: {title}')
         print(f'Цена товара: {price}')
         print(f'Рейтинг: {rating}')
@@ -1130,11 +1129,8 @@ def get_products_data_Shop_mts(link_products, driver, user_id):
 
         except:
             try:
-
                 price_element = WebDriverWait(driver, 10).until(
-                    EC.presence_of_element_located(
-                        (By.XPATH, "//span[contains(., '₽') and contains(., ' ')]")
-                    )
+                    EC.presence_of_element_located((By.CSS_SELECTOR, ".product-price__current > span:first-child"))
                 )
 
                 price_text = price_element.text
@@ -1167,7 +1163,7 @@ def get_products_data_Shop_mts(link_products, driver, user_id):
             reviews = review_count_element.text.strip()
 
             if rating == "Без оценки" or reviews == "0":
-                return None, None
+                return 0, 0
             else:
                 return rating, reviews
 
@@ -1187,7 +1183,6 @@ def get_products_data_Shop_mts(link_products, driver, user_id):
                 img = item.find_element(By.CSS_SELECTOR, 'img.product-gallery-item__preview-image')
                 url = img.get_attribute('data-src') or img.get_attribute('src')
                 if url:
-                    # Убираем параметр изменения размера из URL
                     original_url = url.split('/resize')[0]
                     image_urls.append(original_url)
 
@@ -1207,7 +1202,7 @@ def get_products_data_Shop_mts(link_products, driver, user_id):
     if price == "Товара нет в наличии":
         print(f'Этот товар не будет добавлен: {price}')
     else:
-        if article and title and price and rating and reviews:
+        if article and title and price != None:
             print(f'Артикул: {article}')
             print(f'Заголовок товара: {title}')
             print(f'Цена товара: {price}')
@@ -1290,7 +1285,7 @@ def get_products_data_Technopark(link_products, driver, user_id):
 
         except Exception as e:
             print(f"Ошибка при получении рейтинга или отзывов: {e}")
-            return None, None
+            return 0, 0
 
 
     def get_product_images(driver):
@@ -1307,6 +1302,140 @@ def get_products_data_Technopark(link_products, driver, user_id):
                 if image_url not in image_urls:
                     image_urls.append(image_url)
 
+            image_urls_filtered = []
+            for item in image_urls:
+                if item != None:
+                    image_urls_filtered.append(item)
+
+            return image_urls_filtered
+
+        except Exception as e:
+            print(f"Ошибка при получении изображений: {str(e)}")
+            return []
+
+
+    article = get_product_article(driver)
+    title = get_product_title(driver)
+    price = get_product_price(driver)
+    rating, reviews = get_product_rating_reviews(driver)
+    image_urls = get_product_images(driver)
+
+    if article and title and price != None:
+        print(f'Артикул: {article}')
+        print(f'Заголовок товара: {title}')
+        print(f'Цена товара: {price}')
+        print(f'Рейтинг: {rating}')
+        print(f'Отзывы: {reviews}')
+        print(f"Найдено изображений: {len(image_urls)}")
+
+        for i in range(len(image_urls)):
+            print(f'{i + 1}: {image_urls[i]}')
+
+        Storing_data_Technopark(link_products, article, title, price, rating, reviews, image_urls, user_id)
+    else:
+        print(f'Этот товар не будет добавлен в json-файл')
+
+    print('-----------------------------')
+
+
+def get_products_data_Lamoda(link_products, driver, user_id):
+    print(f'Ссылка на товар:{link_products}')
+
+    def get_product_article(driver):
+        try:
+            article_element = WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, '//span[contains(text(), "Артикул")]/../following-sibling::span'))
+            )
+
+            return article_element.text.strip()
+
+        except Exception as e:
+            print(f"Ошибка при поиске артикула: {str(e)}")
+            return None
+
+
+    def get_product_title(driver):
+        try:
+            title_element = WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, '//div[contains(@class, "_aside_")]//div[@class="_modelName_mnqvr_21"]')
+                )
+            )
+
+            return title_element.text
+
+        except Exception as e:
+            print(f"Не удалось найти название товара: {str(e)}")
+            return None
+
+
+    def get_product_price(driver):
+        try:
+            price_element = WebDriverWait(driver, 20).until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, '//span[@aria-label="Итоговая цена"]')
+                )
+            )
+
+            return price_element.text
+
+        except Exception as e:
+            print(f"Ошибка при получении цены: {str(e)}")
+            return None
+
+
+    def get_product_rating_reviews(driver):
+        try:
+            element = WebDriverWait(driver, 20).until(
+                EC.element_to_be_clickable(
+                    (By.XPATH, "//span[@aria-label='Отзывы' and contains(@class, 'ui-product-page-reviews-tab')]")
+                )
+            )
+            element.click()
+            time.sleep(5)
+
+            reviews_section = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, "//div[@id='reviews-and-questions']"))
+            )
+
+            rating_element = reviews_section.find_element(By.XPATH, ".//div[contains(@class, '_ratingValueScore_')]")
+            rating = rating_element.text
+
+            reviews_element = WebDriverWait(driver, 20).until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, '//div[contains(@class, "_count_") and contains(@class, "_counter_")]/span[contains(text(), "отзыв")]/..')
+                )
+            )
+
+            reviews_text = reviews_element.text
+            reviews = int(reviews_text.split()[0])
+
+            return rating, reviews
+
+        except Exception as e:
+            print(f"Ошибка при получении рейтинга или отзывов: {e}")
+            return 0, 0
+
+
+    def get_product_images(driver):
+        try:
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, "//div[contains(@class, 'ui-product-page-gallery')]"))
+            )
+
+            image_urls = []
+
+            galleries = driver.find_elements(By.XPATH, "//div[contains(@class, 'ui-product-page-gallery')]")
+            for gallery in galleries:
+                imgs = gallery.find_elements(By.TAG_NAME, 'img')
+                for img in imgs:
+                    src = img.get_attribute('src')
+                    if src and 'lmcdn.ru' in src:
+                        if src.startswith('//'):
+                            src = f'https:{src}'
+                        image_urls.append(src)
+
             return image_urls
 
         except Exception as e:
@@ -1320,16 +1449,7 @@ def get_products_data_Technopark(link_products, driver, user_id):
     rating, reviews = get_product_rating_reviews(driver)
     image_urls = get_product_images(driver)
 
-    # print(f'Артикул: {article}')
-    # print(f'Заголовок товара: {title}')
-    # print(f'Цена товара: {price}')
-    # print(f'Рейтинг: {rating}')
-    # print(f'Отзывы: {reviews}')
-    # print(f"Найдено изображений: {len(image_urls)}")
-    # for i in range(len(image_urls)):
-    #     print(f'{i + 1}: {image_urls[i]}')
-
-    if article and title and price and rating and reviews:
+    if article and title and price != None:
         print(f'Артикул: {article}')
         print(f'Заголовок товара: {title}')
         print(f'Цена товара: {price}')
@@ -1340,7 +1460,7 @@ def get_products_data_Technopark(link_products, driver, user_id):
         for i in range(len(image_urls)):
             print(f'{i + 1}: {image_urls[i]}')
 
-        Storing_data_Technopark(link_products, article, title, price, rating, reviews, image_urls, user_id)
+        Storing_data_Lamoda(link_products, article, title, price, rating, reviews, image_urls, user_id)
     else:
         print(f'Этот товар не будет добавлен в json-файл')
 

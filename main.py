@@ -15,7 +15,6 @@ import random
 from selenium.webdriver.common.action_chains import ActionChains
 
 
-
 def get_products_links_html_Ozon(item_name, user_id):
     driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
@@ -448,139 +447,139 @@ def get_products_links_M_Video(item_name, user_id): # Доработать (Пр
         print('-----------------------------')
 
 
-def get_products_links_Avito(item_name, user_id):
-    driver = uc.Chrome(version_main=135)
-    driver.implicitly_wait(10)
-
-    try:
-        driver.get('https://www.avito.ru')
-        time.sleep(3)
-
-        find_input = driver.find_element(By.ID, 'bx_search')
-        find_input.clear()
-        for char in item_name:
-            find_input.send_keys(char)
-            time.sleep(0.1)
-        time.sleep(2)
-        find_input.send_keys(Keys.ENTER)
-        time.sleep(2)
-
-        try:
-            find_links = driver.find_elements(By.CSS_SELECTOR, 'a[itemprop="url"]')
-            #product_urls = [link.get_attribute("href") for link in find_links if link.get_attribute("href") is not None]
-            product_urls = {link.get_attribute("href") for link in find_links if link.get_attribute("href") is not None}
-
-        except Exception as e:
-            print(f'[!] Что-то пошло не так при сборе ссылок на товары Avito: {e}')
-
-        product_urls = list(product_urls)
-
-        count = 0
-        for product_url in product_urls:
-            if not product_url: continue
-
-            try:
-                driver.get(product_url)
-                time.sleep(3)
-
-                print('-------')
-                print(f'Обработка: {count + 1}/{len(product_urls)}')
-                print('-------')
-
-                get_products_data_Avito(product_url, driver=driver, user_id=user_id)
-                count += 1
-            except Exception as e:
-                print(f'Ошибка обработки {product_url}: {str(e)}')
-                print('-----------------------------')
-
-        print('----')
-        print('Данные о товарах упакованы в json')
-        # отправка json результата на REST_API
-
-        # удаление json-файла на сервере
-        # file_path = f"json products data/{user_id}-M_Video.json"
-        # try:
-        #     os.remove(file_path)
-        #     print(f"Файл '{file_path}' успешно удален.")
-        # except FileNotFoundError:
-        #     print(f"Файл '{file_path}' не найден.")
-        # except PermissionError:
-        #     print(f"У вас нет прав для удаления файла '{file_path}'.")
-        # except Exception as e:
-        #     print(f"Произошла ошибка: {e}")
-
-    finally:
-        driver.quit()
-        print("Ozon. Обработка завершена!")
-        print('-----------------------------')
-
-
-def get_products_links_Youla(item_name, user_id):
-    driver = uc.Chrome(version_main=135)
-    driver.implicitly_wait(10)
-
-    try:
-        driver.get('https://www.youla.ru')
-        time.sleep(3)
-
-        find_input = driver.find_element(By.ID, 'downshift-0-input')
-        find_input.clear()
-        find_input.send_keys(item_name)
-        time.sleep(2)
-        find_input.send_keys(Keys.ENTER)
-        time.sleep(2)
-
-
-        try:
-            find_links = driver.find_elements(By.CSS_SELECTOR, 'a[target="_blank"][rel="noopener noreferrer"]')
-            product_urls = {
-                link.get_attribute("href") for link in find_links
-                if link.get_attribute("href") is not None and "source_view=search" in link.get_attribute("href")
-            }
-
-        except Exception as e:
-            print(f'[!] Что-то пошло не так при сборе ссылок на товары Youla: {e}')
-
-        product_urls = list(product_urls)
-
-        count = 0
-        for product_url in product_urls:
-            if not product_url: continue
-
-            try:
-                driver.get(product_url)
-                time.sleep(3)
-
-                print('-------')
-                print(f'Обработка: {count + 1}/{len(product_urls)}')
-                print('-------')
-
-                get_products_data_Youla(product_url, driver=driver, user_id=user_id)
-                count += 1
-            except Exception as e:
-                print(f'Ошибка обработки {product_url}: {str(e)}')
-                print('-----------------------------')
-
-        print('----')
-        print('Данные о товарах упакованы в json')
-        # отправка json результата на REST_API
-
-        # удаление json-файла на сервере
-        # file_path = f"json products data/{user_id}-M_Video.json"
-        # try:
-        #     os.remove(file_path)
-        #     print(f"Файл '{file_path}' успешно удален.")
-        # except FileNotFoundError:
-        #     print(f"Файл '{file_path}' не найден.")
-        # except PermissionError:
-        #     print(f"У вас нет прав для удаления файла '{file_path}'.")
-        # except Exception as e:
-        #     print(f"Произошла ошибка: {e}")
-
-    finally:
-        driver.quit()
-        print("Ozon. Обработка завершена!")
-        print('-----------------------------')
+# def get_products_links_Avito(item_name, user_id):
+#     driver = uc.Chrome(version_main=135)
+#     driver.implicitly_wait(10)
+#
+#     try:
+#         driver.get('https://www.avito.ru')
+#         time.sleep(3)
+#
+#         find_input = driver.find_element(By.ID, 'bx_search')
+#         find_input.clear()
+#         for char in item_name:
+#             find_input.send_keys(char)
+#             time.sleep(0.1)
+#         time.sleep(2)
+#         find_input.send_keys(Keys.ENTER)
+#         time.sleep(2)
+#
+#         try:
+#             find_links = driver.find_elements(By.CSS_SELECTOR, 'a[itemprop="url"]')
+#             #product_urls = [link.get_attribute("href") for link in find_links if link.get_attribute("href") is not None]
+#             product_urls = {link.get_attribute("href") for link in find_links if link.get_attribute("href") is not None}
+#
+#         except Exception as e:
+#             print(f'[!] Что-то пошло не так при сборе ссылок на товары Avito: {e}')
+#
+#         product_urls = list(product_urls)
+#
+#         count = 0
+#         for product_url in product_urls:
+#             if not product_url: continue
+#
+#             try:
+#                 driver.get(product_url)
+#                 time.sleep(3)
+#
+#                 print('-------')
+#                 print(f'Обработка: {count + 1}/{len(product_urls)}')
+#                 print('-------')
+#
+#                 get_products_data_Avito(product_url, driver=driver, user_id=user_id)
+#                 count += 1
+#             except Exception as e:
+#                 print(f'Ошибка обработки {product_url}: {str(e)}')
+#                 print('-----------------------------')
+#
+#         print('----')
+#         print('Данные о товарах упакованы в json')
+#         # отправка json результата на REST_API
+#
+#         # удаление json-файла на сервере
+#         # file_path = f"json products data/{user_id}-M_Video.json"
+#         # try:
+#         #     os.remove(file_path)
+#         #     print(f"Файл '{file_path}' успешно удален.")
+#         # except FileNotFoundError:
+#         #     print(f"Файл '{file_path}' не найден.")
+#         # except PermissionError:
+#         #     print(f"У вас нет прав для удаления файла '{file_path}'.")
+#         # except Exception as e:
+#         #     print(f"Произошла ошибка: {e}")
+#
+#     finally:
+#         driver.quit()
+#         print("Ozon. Обработка завершена!")
+#         print('-----------------------------')
+#
+#
+# def get_products_links_Youla(item_name, user_id):
+#     driver = uc.Chrome(version_main=135)
+#     driver.implicitly_wait(10)
+#
+#     try:
+#         driver.get('https://www.youla.ru')
+#         time.sleep(3)
+#
+#         find_input = driver.find_element(By.ID, 'downshift-0-input')
+#         find_input.clear()
+#         find_input.send_keys(item_name)
+#         time.sleep(2)
+#         find_input.send_keys(Keys.ENTER)
+#         time.sleep(2)
+#
+#
+#         try:
+#             find_links = driver.find_elements(By.CSS_SELECTOR, 'a[target="_blank"][rel="noopener noreferrer"]')
+#             product_urls = {
+#                 link.get_attribute("href") for link in find_links
+#                 if link.get_attribute("href") is not None and "source_view=search" in link.get_attribute("href")
+#             }
+#
+#         except Exception as e:
+#             print(f'[!] Что-то пошло не так при сборе ссылок на товары Youla: {e}')
+#
+#         product_urls = list(product_urls)
+#
+#         count = 0
+#         for product_url in product_urls:
+#             if not product_url: continue
+#
+#             try:
+#                 driver.get(product_url)
+#                 time.sleep(3)
+#
+#                 print('-------')
+#                 print(f'Обработка: {count + 1}/{len(product_urls)}')
+#                 print('-------')
+#
+#                 get_products_data_Youla(product_url, driver=driver, user_id=user_id)
+#                 count += 1
+#             except Exception as e:
+#                 print(f'Ошибка обработки {product_url}: {str(e)}')
+#                 print('-----------------------------')
+#
+#         print('----')
+#         print('Данные о товарах упакованы в json')
+#         # отправка json результата на REST_API
+#
+#         # удаление json-файла на сервере
+#         # file_path = f"json products data/{user_id}-M_Video.json"
+#         # try:
+#         #     os.remove(file_path)
+#         #     print(f"Файл '{file_path}' успешно удален.")
+#         # except FileNotFoundError:
+#         #     print(f"Файл '{file_path}' не найден.")
+#         # except PermissionError:
+#         #     print(f"У вас нет прав для удаления файла '{file_path}'.")
+#         # except Exception as e:
+#         #     print(f"Произошла ошибка: {e}")
+#
+#     finally:
+#         driver.quit()
+#         print("Ozon. Обработка завершена!")
+#         print('-----------------------------')
 
 
 def get_products_links_Aliexpress(item_name, user_id):
@@ -819,7 +818,7 @@ def get_products_links_Technopark(item_name, user_id):
         print('-----------------------------')
 
 
-def get_products_links_Lamoda(item_name):
+def get_products_links_Lamoda(item_name, user_id):
     driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
@@ -837,12 +836,39 @@ def get_products_links_Lamoda(item_name):
 
         product_urls = list(product_urls)
 
-        if product_urls:
-            with open('links to json products/products_urls_lamoda.json', 'w', encoding='utf-8') as file:
-                json.dump(product_urls, file, indent=4, ensure_ascii=False)
-            print(f'[+] Ссылки на товары Lamoda сохранены в файл!')
-        else:
-            print('[!] Не удалось собрать ссылки на товары Lamoda.')
+        count = 0
+        for product_url in product_urls:
+            if not product_url: continue
+
+            try:
+                driver.get(product_url)
+                time.sleep(3)
+
+                print('-------')
+                print(f'Обработка: {count + 1}/{len(product_urls)}')
+                print('-------')
+
+                get_products_data_Lamoda(product_url, driver=driver, user_id=user_id)
+                count += 1
+            except Exception as e:
+                print(f'Ошибка обработки {product_url}: {str(e)}')
+                print('-----------------------------')
+
+        print('----')
+        print('Данные о товарах упакованы в json')
+        # отправка json результата на REST_API
+
+        # удаление json-файла на сервере
+        file_path = f"json products data/{user_id}-Lamoda.json"
+        try:
+            os.remove(file_path)
+            print(f"Файл '{file_path}' успешно удален.")
+        except FileNotFoundError:
+            print(f"Файл '{file_path}' не найден.")
+        except PermissionError:
+            print(f"У вас нет прав для удаления файла '{file_path}'.")
+        except Exception as e:
+            print(f"Произошла ошибка: {e}")
 
 
     finally:
@@ -864,8 +890,8 @@ def main():
     #get_products_links_Aliexpress('наушники xiaomi', user_id='12331224') # 23.63 time.sleep(7) | 19.37 time.sleep(3) | 19.95 query optimization
     #get_products_links_Joom('наушники xiaomi', user_id='12331224') # 18.28 time.sleep(7) | 15.63 time.sleep(3) | 9.49 query optimization
     #get_products_links_Shop_mts('наушники xiaomi', user_id='12331224') # 30.15 time.sleep(7) | 28.37 time.sleep(3) | 12.60 query optimization
-    get_products_links_Technopark('наушники xiaomi', user_id='12331224') # 40.60 time.sleep(7) | 38.19 time.sleep(3) | 31.43 query optimization
-    #get_products_links_Lamoda('кроссовки nike', user_id='12331224') # 21.49 time.sleep(7) | 16.93 time.sleep(3) | 32.77 query optimization
+    #get_products_links_Technopark('наушники xiaomi', user_id='12331224') # 40.60 time.sleep(7) | 38.19 time.sleep(3) | 31.43 query optimization
+    get_products_links_Lamoda('кроссовки nike', user_id='12331224') # 21.49 time.sleep(7) | 16.93 time.sleep(3) | 32.77 query optimization
 
 
 if __name__ == '__main__':
