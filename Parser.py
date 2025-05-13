@@ -16,7 +16,7 @@ from Storing_data_json import *
 import random
 
 
-def get_products_data_Ozon(link_products, driver, user_id):
+def get_products_data_Ozon(link_products, driver, user_ip):
     print(f'Ссылка на товар:{link_products}')
 
     def get_product_article(driver):
@@ -149,14 +149,14 @@ def get_products_data_Ozon(link_products, driver, user_id):
         for i in range(len(image_urls)):
             print(f'{i + 1}: {image_urls[i]}')
 
-        Storing_data_Ozon(link_products, article.group(1), title, price, rating, reviews, image_urls, user_id)
+        Storing_data_Ozon(link_products, article.group(1), title, price, rating, reviews, image_urls, user_ip)
     else:
         print(f'Этот товар не будет добавлен в json-файл')
 
     print('-----------------------------')
 
 
-def get_products_data_WB(link_products, driver, user_id):
+def get_products_data_WB(link_products, driver, user_ip):
     print(f'Ссылка на товар:{link_products}')
 
     def get_product_article(driver):
@@ -273,14 +273,14 @@ def get_products_data_WB(link_products, driver, user_id):
         for i in range(len(image_urls)):
             print(f'{i + 1}: {image_urls[i]}')
 
-        Storing_data_WB(link_products, article.group(1), title, price, rating, reviews, image_urls, user_id)
+        Storing_data_WB(link_products, article.group(1), title, price, rating, reviews, image_urls, user_ip)
     else:
         print(f'Этот товар не будет добавлен в json-файл')
 
     print('-----------------------------')
 
 
-def get_products_data_YandexMarket(link_products, driver, user_id):
+def get_products_data_YandexMarket(link_products, driver, user_ip):
     print(f'Ссылка на товар:{link_products}')
 
     def get_product_article(driver):
@@ -387,14 +387,14 @@ def get_products_data_YandexMarket(link_products, driver, user_id):
         for i in range(len(image_urls)):
             print(f'{i + 1}: {image_urls[i]}')
 
-        Storing_data_YandexMarket(link_products, article, title, price, rating, reviews, image_urls, user_id)
+        Storing_data_YandexMarket(link_products, article, title, price, rating, reviews, image_urls, user_ip)
     else:
         print(f'Этот товар не будет добавлен в json-файл')
 
     print('-----------------------------')
 
 
-def get_products_data_MagnitMarket(link_products, driver, user_id):
+def get_products_data_MagnitMarket(link_products, driver, user_ip):
     print(f'Ссылка на товар:{link_products}')
 
     def get_product_title(driver):
@@ -497,14 +497,14 @@ def get_products_data_MagnitMarket(link_products, driver, user_id):
         for i in range(len(image_urls)):
             print(f'{i + 1}: {image_urls[i]}')
 
-        Storing_data_MagnitMarket(link_products, title, price, rating, reviews, image_urls, user_id)
+        Storing_data_MagnitMarket(link_products, title, price, rating, reviews, image_urls, user_ip)
     else:
         print(f'Этот товар не будет добавлен в json-файл')
 
     print('-----------------------------')
 
 
-def get_products_data_DNS(link_products, driver, user_id):
+def get_products_data_DNS(link_products, driver, user_ip):
     print(f'Ссылка на товар:{link_products}')
 
     def get_product_article(driver):
@@ -613,14 +613,14 @@ def get_products_data_DNS(link_products, driver, user_id):
         for i in range(len(image_urls)):
             print(f'{i + 1}: {image_urls[i]}')
 
-        Storing_data_DNS(link_products, article, title, price, rating, reviews, image_urls[0], user_id)
+        Storing_data_DNS(link_products, article, title, price, rating, reviews, image_urls[0], user_ip)
     else:
         print(f'Этот товар не будет добавлен в json-файл')
 
     print('-----------------------------')
 
 
-def get_products_data_Citilink(link_products, driver, user_id):
+def get_products_data_Citilink(link_products, driver, user_ip):
     print(f'Ссылка на товар:{link_products}')
 
     def get_product_article(driver):
@@ -733,14 +733,14 @@ def get_products_data_Citilink(link_products, driver, user_id):
         for i in range(len(image_urls)):
             print(f'{i + 1}: {image_urls[i]}')
 
-        Storing_data_Citilink(link_products, article, title, price, rating, reviews, image_urls, user_id)
+        Storing_data_Citilink(link_products, article, title, price, rating, reviews, image_urls, user_ip)
     else:
         print(f'Этот товар не будет добавлен в json-файл')
 
     print('-----------------------------')
 
 
-def get_products_data_M_Video(link_products, driver, user_id):
+def get_products_data_M_Video(link_products, driver, user_ip):
     print(f'Ссылка на товар:{link_products}')
 
     def get_product_article(driver):
@@ -859,7 +859,7 @@ def get_products_data_M_Video(link_products, driver, user_id):
         for i in range(len(image_urls)):
             print(f'{i + 1}: {image_urls[i]}')
 
-        Storing_data_M_Video(link_products, article, title, price, rating, reviews, image_urls, user_id)
+        Storing_data_M_Video(link_products, article, title, price, rating, reviews, image_urls, user_ip)
     else:
         print(f'Этот товар не будет добавлен в json-файл')
 
@@ -874,7 +874,7 @@ def get_products_data_M_Video(link_products, driver, user_id):
 #     print(f'Ссылка на товар:{link_products}')
 
 
-def get_products_data_Aliexpress(link_products, driver, user_id):
+def get_products_data_Aliexpress(link_products, driver, user_ip):
     print(f'Ссылка на товар:{link_products}')
 
     def get_product_title(driver):
@@ -970,14 +970,14 @@ def get_products_data_Aliexpress(link_products, driver, user_id):
         for i in range(len(image_urls)):
             print(f'{i + 1}: {image_urls[i]}')
 
-        Storing_data_Aliexpress(link_products, title, price, rating, reviews, image_urls, user_id)
+        Storing_data_Aliexpress(link_products, title, price, rating, reviews, image_urls, user_ip)
     else:
         print(f'Этот товар не будет добавлен в json-файл')
 
     print('-----------------------------')
 
 
-def get_products_data_Joom(link_products, driver, user_id):
+def get_products_data_Joom(link_products, driver, user_ip):
     print(f'Ссылка на товар:{link_products}')
 
     def get_product_title(driver):
@@ -1082,14 +1082,14 @@ def get_products_data_Joom(link_products, driver, user_id):
         for i in range(len(image_urls)):
             print(f'{i + 1}: {image_urls[i]}')
 
-        Storing_data_Joom(link_products, title, price, rating, reviews, image_urls, user_id)
+        Storing_data_Joom(link_products, title, price, rating, reviews, image_urls, user_ip)
     else:
         print(f'Этот товар не будет добавлен в json-файл')
 
     print('-----------------------------')
 
 
-def get_products_data_Shop_mts(link_products, driver, user_id):
+def get_products_data_Shop_mts(link_products, driver, user_ip):
     print(f'Ссылка на товар:{link_products}')
 
     def get_product_article(driver):
@@ -1213,14 +1213,14 @@ def get_products_data_Shop_mts(link_products, driver, user_id):
             for i in range(len(image_urls)):
                 print(f'{i + 1}: {image_urls[i]}')
 
-            Storing_data_Shop_mts(link_products, article, title, price, rating, reviews, image_urls, user_id)
+            Storing_data_Shop_mts(link_products, article, title, price, rating, reviews, image_urls, user_ip)
         else:
             print(f'Этот товар не будет добавлен в json-файл')
 
     print('-----------------------------')
 
 
-def get_products_data_Technopark(link_products, driver, user_id):
+def get_products_data_Technopark(link_products, driver, user_ip):
     print(f'Ссылка на товар:{link_products}')
 
     def get_product_article(driver):
@@ -1304,7 +1304,7 @@ def get_products_data_Technopark(link_products, driver, user_id):
 
             image_urls_filtered = []
             for item in image_urls:
-                if item != None:
+                if item is not None:
                     image_urls_filtered.append(item)
 
             return image_urls_filtered
@@ -1331,14 +1331,14 @@ def get_products_data_Technopark(link_products, driver, user_id):
         for i in range(len(image_urls)):
             print(f'{i + 1}: {image_urls[i]}')
 
-        Storing_data_Technopark(link_products, article, title, price, rating, reviews, image_urls, user_id)
+        Storing_data_Technopark(link_products, article, title, price, rating, reviews, image_urls, user_ip)
     else:
         print(f'Этот товар не будет добавлен в json-файл')
 
     print('-----------------------------')
 
 
-def get_products_data_Lamoda(link_products, driver, user_id):
+def get_products_data_Lamoda(link_products, driver, user_ip):
     print(f'Ссылка на товар:{link_products}')
 
     def get_product_article(driver):
@@ -1461,7 +1461,7 @@ def get_products_data_Lamoda(link_products, driver, user_id):
         for i in range(len(image_urls)):
             print(f'{i + 1}: {image_urls[i]}')
 
-        Storing_data_Lamoda(link_products, article, title, price, rating, reviews, image_urls, user_id)
+        Storing_data_Lamoda(link_products, article, title, price, rating, reviews, image_urls, user_ip)
     else:
         print(f'Этот товар не будет добавлен в json-файл')
 

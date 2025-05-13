@@ -2,7 +2,7 @@ import json
 import os
 
 
-def Storing_data_Ozon(link_products, article, title, price, rating, reviews, image_urls, user_id):
+def Storing_data_Ozon(link_products, article, title, price, rating, reviews, image_urls, user_ip):
     product_data = {
         "link_products": link_products,
         "article": article,
@@ -13,7 +13,7 @@ def Storing_data_Ozon(link_products, article, title, price, rating, reviews, ima
         "image_urls": image_urls
     }
 
-    filename = f"json products data/{user_id}-Ozon.json"
+    filename = f"json products data/{user_ip}-Ozon.json"
     data = []
 
     if os.path.exists(filename):
@@ -29,7 +29,7 @@ def Storing_data_Ozon(link_products, article, title, price, rating, reviews, ima
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 
-def Storing_data_WB(link_products, article, title, price, rating, reviews, image_urls, user_id):
+def Storing_data_WB(link_products, article, title, price, rating, reviews, image_urls, user_ip):
     product_data = {
         "link_products": link_products,
         "article": article,
@@ -40,7 +40,7 @@ def Storing_data_WB(link_products, article, title, price, rating, reviews, image
         "image_urls": image_urls
     }
 
-    filename = f"json products data/{user_id}-WB.json"
+    filename = f"json products data/{user_ip}-WB.json"
     data = []
 
     if os.path.exists(filename):
@@ -56,7 +56,7 @@ def Storing_data_WB(link_products, article, title, price, rating, reviews, image
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 
-def Storing_data_YandexMarket(link_products, article, title, price, rating, reviews, image_urls, user_id):
+def Storing_data_YandexMarket(link_products, article, title, price, rating, reviews, image_urls, user_ip):
     product_data = {
         "link_products": link_products,
         "article": article,
@@ -67,7 +67,7 @@ def Storing_data_YandexMarket(link_products, article, title, price, rating, revi
         "image_urls": image_urls
     }
 
-    filename = f"json products data/{user_id}-YandexMarket.json"
+    filename = f"json products data/{user_ip}-YandexMarket.json"
     data = []
 
     if os.path.exists(filename):
@@ -83,7 +83,7 @@ def Storing_data_YandexMarket(link_products, article, title, price, rating, revi
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 
-def Storing_data_MagnitMarket(link_products, title, price, rating, reviews, image_urls, user_id):
+def Storing_data_MagnitMarket(link_products, title, price, rating, reviews, image_urls, user_ip):
     product_data = {
         "link_products": link_products,
         "title": title,
@@ -93,7 +93,7 @@ def Storing_data_MagnitMarket(link_products, title, price, rating, reviews, imag
         "image_urls": image_urls
     }
 
-    filename = f"json products data/{user_id}-MagnitMarket.json"
+    filename = f"json products data/{user_ip}-MagnitMarket.json"
     data = []
 
     if os.path.exists(filename):
@@ -109,7 +109,7 @@ def Storing_data_MagnitMarket(link_products, title, price, rating, reviews, imag
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 
-def Storing_data_DNS(link_products, article, title, price, rating, reviews, image_urls, user_id):
+def Storing_data_DNS(link_products, article, title, price, rating, reviews, image_urls, user_ip):
     product_data = {
         "link_products": link_products,
         "article": article,
@@ -120,7 +120,7 @@ def Storing_data_DNS(link_products, article, title, price, rating, reviews, imag
         "image_urls": image_urls
     }
 
-    filename = f"json products data/{user_id}-DNS.json"
+    filename = f"json products data/{user_ip}-DNS.json"
     data = []
 
     if os.path.exists(filename):
@@ -136,7 +136,7 @@ def Storing_data_DNS(link_products, article, title, price, rating, reviews, imag
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 
-def Storing_data_Citilink(link_products, article, title, price, rating, reviews, image_urls, user_id):
+def Storing_data_Citilink(link_products, article, title, price, rating, reviews, image_urls, user_ip):
     product_data = {
         "link_products": link_products,
         "article": article,
@@ -147,7 +147,7 @@ def Storing_data_Citilink(link_products, article, title, price, rating, reviews,
         "image_urls": image_urls
     }
 
-    filename = f"json products data/{user_id}-Citilink.json"
+    filename = f"json products data/{user_ip}-Citilink.json"
     data = []
 
     if os.path.exists(filename):
@@ -163,7 +163,7 @@ def Storing_data_Citilink(link_products, article, title, price, rating, reviews,
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 
-def Storing_data_M_Video(link_products, article, title, price, rating, reviews, image_urls, user_id):
+def Storing_data_M_Video(link_products, article, title, price, rating, reviews, image_urls, user_ip):
     product_data = {
         "link_products": link_products,
         "article": article,
@@ -174,7 +174,7 @@ def Storing_data_M_Video(link_products, article, title, price, rating, reviews, 
         "image_urls": image_urls
     }
 
-    filename = f"json products data/{user_id}-M_Video.json"
+    filename = f"json products data/{user_ip}-M_Video.json"
     data = []
 
     if os.path.exists(filename):
@@ -196,7 +196,7 @@ def Storing_data_M_Video(link_products, article, title, price, rating, reviews, 
 # def Storing_data_Youla(link_products, article, title, price, rating, reviews, image_urls, user_id):
 
 
-def Storing_data_Aliexpress(link_products, title, price, rating, reviews, image_urls, user_id):
+def Storing_data_Aliexpress(link_products, title, price, rating, reviews, image_urls, user_ip):
     product_data = {
         "link_products": link_products,
         "title": title,
@@ -206,7 +206,7 @@ def Storing_data_Aliexpress(link_products, title, price, rating, reviews, image_
         "image_urls": image_urls
     }
 
-    filename = f"json products data/{user_id}-Aliexpress.json"
+    filename = f"json products data/{user_ip}-Aliexpress.json"
     data = []
 
     if os.path.exists(filename):
@@ -222,7 +222,7 @@ def Storing_data_Aliexpress(link_products, title, price, rating, reviews, image_
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 
-def Storing_data_Joom(link_products, title, price, rating, reviews, image_urls, user_id):
+def Storing_data_Joom(link_products, title, price, rating, reviews, image_urls, user_ip):
     product_data = {
         "link_products": link_products,
         "title": title,
@@ -232,7 +232,7 @@ def Storing_data_Joom(link_products, title, price, rating, reviews, image_urls, 
         "image_urls": image_urls
     }
 
-    filename = f"json products data/{user_id}-Joom.json"
+    filename = f"json products data/{user_ip}-Joom.json"
     data = []
 
     if os.path.exists(filename):
@@ -248,7 +248,7 @@ def Storing_data_Joom(link_products, title, price, rating, reviews, image_urls, 
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 
-def Storing_data_Shop_mts(link_products, article, title, price, rating, reviews, image_urls, user_id):
+def Storing_data_Shop_mts(link_products, article, title, price, rating, reviews, image_urls, user_ip):
     product_data = {
         "link_products": link_products,
         "article": article,
@@ -259,7 +259,7 @@ def Storing_data_Shop_mts(link_products, article, title, price, rating, reviews,
         "image_urls": image_urls
     }
 
-    filename = f"json products data/{user_id}-Shop_mts.json"
+    filename = f"json products data/{user_ip}-Shop_mts.json"
     data = []
 
     if os.path.exists(filename):
@@ -275,7 +275,7 @@ def Storing_data_Shop_mts(link_products, article, title, price, rating, reviews,
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 
-def Storing_data_Technopark(link_products, article, title, price, rating, reviews, image_urls, user_id):
+def Storing_data_Technopark(link_products, article, title, price, rating, reviews, image_urls, user_ip):
     product_data = {
         "link_products": link_products,
         "article": article,
@@ -286,7 +286,7 @@ def Storing_data_Technopark(link_products, article, title, price, rating, review
         "image_urls": image_urls
     }
 
-    filename = f"json products data/{user_id}-Technopark.json"
+    filename = f"json products data/{user_ip}-Technopark.json"
     data = []
 
     if os.path.exists(filename):
@@ -302,7 +302,7 @@ def Storing_data_Technopark(link_products, article, title, price, rating, review
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 
-def Storing_data_Lamoda(link_products, article, title, price, rating, reviews, image_urls, user_id):
+def Storing_data_Lamoda(link_products, article, title, price, rating, reviews, image_urls, user_ip):
     product_data = {
         "link_products": link_products,
         "article": article,
@@ -313,7 +313,7 @@ def Storing_data_Lamoda(link_products, article, title, price, rating, reviews, i
         "image_urls": image_urls
     }
 
-    filename = f"json products data/{user_id}-Lamoda.json"
+    filename = f"json products data/{user_ip}-Lamoda.json"
     data = []
 
     if os.path.exists(filename):

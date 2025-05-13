@@ -13,9 +13,86 @@ from Parser import *
 from scroll_page import dynamic_scroll
 import random
 from selenium.webdriver.common.action_chains import ActionChains
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import threading
+import requests
 
 
-def get_products_links_html_Ozon(item_name, user_id):
+app = Flask(__name__)
+CORS(app)
+
+@app.route('/parse', methods=['POST'])
+
+@app.route('/status')
+def status():
+    # Здесь можно добавить логику проверки занятости сервера
+    return jsonify({"status": "ready"})
+
+def parse_marketplace():
+    data = request.json
+    query = data['query']
+    marketplace = data['marketplace']
+    ip = data['ip']
+
+    # Запускаем парсинг в отдельном потоке
+    thread = threading.Thread(
+        target=run_parsing,
+        args=(query, marketplace, ip)
+    )
+    thread.start()
+
+    return jsonify({"status": "started"})
+
+
+def run_parsing(query, marketplace, ip):
+    # Отправляем статус на REST API
+    def send_status(message):
+        requests.post(
+            'http://nodejs-api:3000/api/status',
+            json={'ip': ip, 'message': message}
+        )
+
+    # Вызываем соответствующую функцию парсинга
+    if marketplace == 'Ozon':
+        send_status(f"Ozon: Начало парсинга для '{query}'")
+        get_products_links_html_Ozon(query, ip)
+    elif marketplace == 'Wildberries':
+        send_status(f"Wildberries: Начало парсинга для '{query}'")
+        get_products_links_WB(query, ip)
+    elif marketplace == 'YandexMarket':
+        send_status(f"YandexMarket: Начало парсинга для '{query}'")
+        get_products_links_YandexMarket(query, ip)
+    elif marketplace == 'MagnitMarket':
+        send_status(f"MagnitMarket: Начало парсинга для '{query}'")
+        get_products_links_MagnitMarket(query, ip)
+    elif marketplace == 'DNS':
+        send_status(f"DNS: Начало парсинга для '{query}'")
+        get_products_links_DNS(query, ip)
+    elif marketplace == 'Citilink':
+        send_status(f"Citilink: Начало парсинга для '{query}'")
+        get_products_links_Citilink(query, ip)
+    elif marketplace == 'M_Video':
+        send_status(f"M_Video: Начало парсинга для '{query}'")
+        get_products_links_M_Video(query, ip)
+    elif marketplace == 'Aliexpress':
+        send_status(f"Aliexpress: Начало парсинга для '{query}'")
+        get_products_links_Aliexpress(query, ip)
+    elif marketplace == 'Joom':
+        send_status(f"Joom: Начало парсинга для '{query}'")
+        get_products_links_Joom(query, ip)
+    elif marketplace == 'Shop_mts':
+        send_status(f"Shop_mts: Начало парсинга для '{query}'")
+        get_products_links_Shop_mts(query, ip)
+    elif marketplace == 'Technopark':
+        send_status(f"Technopark: Начало парсинга для '{query}'")
+        get_products_links_Technopark(query, ip)
+    elif marketplace == 'Lamoda':
+        send_status(f"Lamoda: Начало парсинга для '{query}'")
+        get_products_links_Lamoda(query, ip)
+
+
+def get_products_links_html_Ozon(item_name, user_ip):
     driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
@@ -48,7 +125,16 @@ def get_products_links_html_Ozon(item_name, user_id):
                 print(f'Обработка: {count + 1}/{len(product_urls)}')
                 print('-------')
 
-                get_products_data_Ozon(product_url, driver=driver, user_id=user_id)
+                # Отправляем статус
+                requests.post(
+                    'http://nodejs-api:3000/api/status',
+                    json={
+                        'ip': user_ip,
+                        'message': f'Ozon: Обработка {count + 1}/{len(product_urls)}'
+                    }
+                )
+
+                get_products_data_Ozon(product_url, driver=driver, user_ip=user_ip)
                 count += 1
 
             except Exception as e:
@@ -57,10 +143,25 @@ def get_products_links_html_Ozon(item_name, user_id):
 
         print('----')
         print('Данные о товарах упакованы в json')
-        # отправка json результата на REST_API
+
+        print('Отправка json результата на REST_API')
+        try:
+            with open(f"json products data/{user_ip}-Ozon.json", "r", encoding="utf-8") as f:
+                data = json.load(f)
+                response = requests.post(
+                    'http://nodejs-api:3000/api/data',
+                    json={
+                        'ip': user_ip,
+                        'marketplace': 'Ozon',
+                        'data': data
+                    }
+                )
+                print(f"Ответ от API: {response.status_code}")
+        except Exception as e:
+            print(f"Ошибка при отправке данных в API: {e}")
 
         # удаление json-файла на сервере
-        file_path = f"json products data/{user_id}-Ozon.json"
+        file_path = f"json products data/{user_ip}-Ozon.json"
         try:
             os.remove(file_path)
             print(f"Файл '{file_path}' успешно удален.")
@@ -77,7 +178,7 @@ def get_products_links_html_Ozon(item_name, user_id):
         print('-----------------------------')
 
 
-def get_products_links_WB(item_name, user_id):
+def get_products_links_WB(item_name, user_ip):
     driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
@@ -110,7 +211,16 @@ def get_products_links_WB(item_name, user_id):
                 print(f'Обработка: {count + 1}/{len(product_urls)}')
                 print('-------')
 
-                get_products_data_WB(product_url, driver=driver, user_id=user_id)
+                # Отправляем статус
+                requests.post(
+                    'http://nodejs-api:3000/api/status',
+                    json={
+                        'ip': user_ip,
+                        'message': f'Ozon: Обработка {count + 1}/{len(product_urls)}'
+                    }
+                )
+
+                get_products_data_WB(product_url, driver=driver, user_id=user_ip)
                 count += 1
             except Exception as e:
                 print(f"Ошибка обработки {product_url}: {str(e)}")
@@ -118,10 +228,25 @@ def get_products_links_WB(item_name, user_id):
 
         print('----')
         print('Данные о товарах упакованы в json')
-        # отправка json результата на REST_API
+
+        print('Отправка json результата на REST_API')
+        try:
+            with open(f"json products data/{user_ip}-WB.json", "r", encoding="utf-8") as f:
+                data = json.load(f)
+                response = requests.post(
+                    'http://nodejs-api:3000/api/data',
+                    json={
+                        'ip': user_ip,
+                        'marketplace': 'Ozon',
+                        'data': data
+                    }
+                )
+                print(f"Ответ от API: {response.status_code}")
+        except Exception as e:
+            print(f"Ошибка при отправке данных в API: {e}")
 
         # удаление json-файла на сервере
-        file_path = f"json products data/{user_id}-WB.json"
+        file_path = f"json products data/{user_ip}-WB.json"
         try:
             os.remove(file_path)
             print(f"Файл '{file_path}' успешно удален.")
@@ -138,7 +263,7 @@ def get_products_links_WB(item_name, user_id):
         print('-----------------------------')
 
 
-def get_products_links_YandexMarket(item_name, user_id):
+def get_products_links_YandexMarket(item_name, user_ip):
     driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(15)
 
@@ -175,7 +300,16 @@ def get_products_links_YandexMarket(item_name, user_id):
                 print(f'Обработка: {count + 1}/{len(product_urls)}')
                 print('-------')
 
-                get_products_data_YandexMarket(product_url, driver=driver, user_id=user_id)
+                # Отправляем статус
+                requests.post(
+                    'http://nodejs-api:3000/api/status',
+                    json={
+                        'ip': user_ip,
+                        'message': f'Ozon: Обработка {count + 1}/{len(product_urls)}'
+                    }
+                )
+
+                get_products_data_YandexMarket(product_url, driver=driver, user_id=user_ip)
                 count += 1
             except Exception as e:
                 print(f'Ошибка обработки {product_url}: {str(e)}')
@@ -183,10 +317,25 @@ def get_products_links_YandexMarket(item_name, user_id):
 
         print('----')
         print('Данные о товарах упакованы в json')
-        # отправка json результата на REST_API
+
+        print('Отправка json результата на REST_API')
+        try:
+            with open(f"json products data/{user_ip}-YandexMarket.json", "r", encoding="utf-8") as f:
+                data = json.load(f)
+                response = requests.post(
+                    'http://nodejs-api:3000/api/data',
+                    json={
+                        'ip': user_ip,
+                        'marketplace': 'Ozon',
+                        'data': data
+                    }
+                )
+                print(f"Ответ от API: {response.status_code}")
+        except Exception as e:
+            print(f"Ошибка при отправке данных в API: {e}")
 
         # удаление json-файла на сервере
-        file_path = f"json products data/{user_id}-YandexMarket.json"
+        file_path = f"json products data/{user_ip}-YandexMarket.json"
         try:
             os.remove(file_path)
             print(f"Файл '{file_path}' успешно удален.")
@@ -203,7 +352,7 @@ def get_products_links_YandexMarket(item_name, user_id):
         print('-----------------------------')
 
 
-def get_products_links_MagnitMarket(item_name, user_id):
+def get_products_links_MagnitMarket(item_name, user_ip):
     driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
@@ -235,7 +384,16 @@ def get_products_links_MagnitMarket(item_name, user_id):
                 print(f'Обработка: {count+1}/{len(product_urls)}')
                 print('-------')
 
-                get_products_data_MagnitMarket(product_url, driver=driver, user_id=user_id)
+                # Отправляем статус
+                requests.post(
+                    'http://nodejs-api:3000/api/status',
+                    json={
+                        'ip': user_ip,
+                        'message': f'Ozon: Обработка {count + 1}/{len(product_urls)}'
+                    }
+                )
+
+                get_products_data_MagnitMarket(product_url, driver=driver, user_id=user_ip)
                 count += 1
             except Exception as e:
                 print(f'Ошибка обработки {product_url}: {str(e)}')
@@ -243,11 +401,26 @@ def get_products_links_MagnitMarket(item_name, user_id):
 
         print('----')
         print('Данные о товарах упакованы в json')
-        # отправка json результата на REST_API
+
+        print('Отправка json результата на REST_API')
+        try:
+            with open(f"json products data/{user_ip}-MagnitMarket.json", "r", encoding="utf-8") as f:
+                data = json.load(f)
+                response = requests.post(
+                    'http://nodejs-api:3000/api/data',
+                    json={
+                        'ip': user_ip,
+                        'marketplace': 'Ozon',
+                        'data': data
+                    }
+                )
+                print(f"Ответ от API: {response.status_code}")
+        except Exception as e:
+            print(f"Ошибка при отправке данных в API: {e}")
 
 
         # удаление json-файла на сервере
-        file_path = f"json products data/{user_id}-MagnitMarket.json"
+        file_path = f"json products data/{user_ip}-MagnitMarket.json"
         try:
             os.remove(file_path)
             print(f"Файл '{file_path}' успешно удален.")
@@ -264,7 +437,7 @@ def get_products_links_MagnitMarket(item_name, user_id):
         print('-----------------------------')
 
 
-def get_products_links_DNS(item_name, user_id):
+def get_products_links_DNS(item_name, user_ip):
     driver = uc.Chrome(version_main=135)
     wait = WebDriverWait(driver, 10)
 
@@ -302,7 +475,16 @@ def get_products_links_DNS(item_name, user_id):
                 print(f'Обработка: {count + 1}/{len(product_urls)}')
                 print('-------')
 
-                get_products_data_DNS(product_url, driver=driver, user_id=user_id)
+                # Отправляем статус
+                requests.post(
+                    'http://nodejs-api:3000/api/status',
+                    json={
+                        'ip': user_ip,
+                        'message': f'Ozon: Обработка {count + 1}/{len(product_urls)}'
+                    }
+                )
+
+                get_products_data_DNS(product_url, driver=driver, user_id=user_ip)
                 count += 1
             except Exception as e:
                 print(f'Ошибка обработки {product_url}: {str(e)}')
@@ -310,10 +492,25 @@ def get_products_links_DNS(item_name, user_id):
 
         print('----')
         print('Данные о товарах упакованы в json')
-        # отправка json результата на REST_API
+
+        print('Отправка json результата на REST_API')
+        try:
+            with open(f"json products data/{user_ip}-DNS.json", "r", encoding="utf-8") as f:
+                data = json.load(f)
+                response = requests.post(
+                    'http://nodejs-api:3000/api/data',
+                    json={
+                        'ip': user_ip,
+                        'marketplace': 'Ozon',
+                        'data': data
+                    }
+                )
+                print(f"Ответ от API: {response.status_code}")
+        except Exception as e:
+            print(f"Ошибка при отправке данных в API: {e}")
 
         # удаление json-файла на сервере
-        file_path = f"json products data/{user_id}-DNS.json"
+        file_path = f"json products data/{user_ip}-DNS.json"
         try:
             os.remove(file_path)
             print(f"Файл '{file_path}' успешно удален.")
@@ -331,7 +528,7 @@ def get_products_links_DNS(item_name, user_id):
         print('-----------------------------')
 
 
-def get_products_links_Citilink(item_name, user_id): # Дописать парсинг картинок
+def get_products_links_Citilink(item_name, user_ip): # Дописать парсинг картинок
     driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
@@ -361,7 +558,16 @@ def get_products_links_Citilink(item_name, user_id): # Дописать парс
                 print(f'Обработка: {count + 1}/{len(product_urls)}')
                 print('-------')
 
-                get_products_data_Citilink(product_url, driver=driver, user_id=user_id)
+                # Отправляем статус
+                requests.post(
+                    'http://nodejs-api:3000/api/status',
+                    json={
+                        'ip': user_ip,
+                        'message': f'Ozon: Обработка {count + 1}/{len(product_urls)}'
+                    }
+                )
+
+                get_products_data_Citilink(product_url, driver=driver, user_id=user_ip)
                 count += 1
             except Exception as e:
                 print(f'Ошибка обработки {product_url}: {str(e)}')
@@ -369,10 +575,25 @@ def get_products_links_Citilink(item_name, user_id): # Дописать парс
 
         print('----')
         print('Данные о товарах упакованы в json')
-        # отправка json результата на REST_API
+
+        print('Отправка json результата на REST_API')
+        try:
+            with open(f"json products data/{user_ip}-Citilink.json", "r", encoding="utf-8") as f:
+                data = json.load(f)
+                response = requests.post(
+                    'http://nodejs-api:3000/api/data',
+                    json={
+                        'ip': user_ip,
+                        'marketplace': 'Ozon',
+                        'data': data
+                    }
+                )
+                print(f"Ответ от API: {response.status_code}")
+        except Exception as e:
+            print(f"Ошибка при отправке данных в API: {e}")
 
         # удаление json-файла на сервере
-        file_path = f"json products data/{user_id}-Citilink.json"
+        file_path = f"json products data/{user_ip}-Citilink.json"
         try:
             os.remove(file_path)
             print(f"Файл '{file_path}' успешно удален.")
@@ -389,7 +610,7 @@ def get_products_links_Citilink(item_name, user_id): # Дописать парс
         print('-----------------------------')
 
 
-def get_products_links_M_Video(item_name, user_id): # Доработать (Пропадают цены время от времени)
+def get_products_links_M_Video(item_name, user_ip): # Доработать (Пропадают цены время от времени)
     driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
@@ -419,7 +640,16 @@ def get_products_links_M_Video(item_name, user_id): # Доработать (Пр
                 print(f'Обработка: {count + 1}/{len(product_urls)}')
                 print('-------')
 
-                get_products_data_M_Video(product_url, driver=driver, user_id=user_id)
+                # Отправляем статус
+                requests.post(
+                    'http://nodejs-api:3000/api/status',
+                    json={
+                        'ip': user_ip,
+                        'message': f'Ozon: Обработка {count + 1}/{len(product_urls)}'
+                    }
+                )
+
+                get_products_data_M_Video(product_url, driver=driver, user_id=user_ip)
                 count += 1
             except Exception as e:
                 print(f'Ошибка обработки {product_url}: {str(e)}')
@@ -427,10 +657,25 @@ def get_products_links_M_Video(item_name, user_id): # Доработать (Пр
 
         print('----')
         print('Данные о товарах упакованы в json')
-        # отправка json результата на REST_API
+
+        print('Отправка json результата на REST_API')
+        try:
+            with open(f"json products data/{user_ip}-M_Video.json", "r", encoding="utf-8") as f:
+                data = json.load(f)
+                response = requests.post(
+                    'http://nodejs-api:3000/api/data',
+                    json={
+                        'ip': user_ip,
+                        'marketplace': 'Ozon',
+                        'data': data
+                    }
+                )
+                print(f"Ответ от API: {response.status_code}")
+        except Exception as e:
+            print(f"Ошибка при отправке данных в API: {e}")
 
         # удаление json-файла на сервере
-        file_path = f"json products data/{user_id}-M_Video.json"
+        file_path = f"json products data/{user_ip}-M_Video.json"
         try:
             os.remove(file_path)
             print(f"Файл '{file_path}' успешно удален.")
@@ -582,7 +827,7 @@ def get_products_links_M_Video(item_name, user_id): # Доработать (Пр
 #         print('-----------------------------')
 
 
-def get_products_links_Aliexpress(item_name, user_id):
+def get_products_links_Aliexpress(item_name, user_ip):
     driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
@@ -612,7 +857,16 @@ def get_products_links_Aliexpress(item_name, user_id):
                 print(f'Обработка: {count + 1}/{len(product_urls)}')
                 print('-------')
 
-                get_products_data_Aliexpress(product_url, driver=driver, user_id=user_id)
+                # Отправляем статус
+                requests.post(
+                    'http://nodejs-api:3000/api/status',
+                    json={
+                        'ip': user_ip,
+                        'message': f'Ozon: Обработка {count + 1}/{len(product_urls)}'
+                    }
+                )
+
+                get_products_data_Aliexpress(product_url, driver=driver, user_id=user_ip)
                 count += 1
             except Exception as e:
                 print(f'Ошибка обработки {product_url}: {str(e)}')
@@ -620,10 +874,25 @@ def get_products_links_Aliexpress(item_name, user_id):
 
         print('----')
         print('Данные о товарах упакованы в json')
-        # отправка json результата на REST_API
+
+        print('Отправка json результата на REST_API')
+        try:
+            with open(f"json products data/{user_ip}-Aliexpress.json", "r", encoding="utf-8") as f:
+                data = json.load(f)
+                response = requests.post(
+                    'http://nodejs-api:3000/api/data',
+                    json={
+                        'ip': user_ip,
+                        'marketplace': 'Ozon',
+                        'data': data
+                    }
+                )
+                print(f"Ответ от API: {response.status_code}")
+        except Exception as e:
+            print(f"Ошибка при отправке данных в API: {e}")
 
         # удаление json-файла на сервере
-        file_path = f"json products data/{user_id}-Aliexpress.json"
+        file_path = f"json products data/{user_ip}-Aliexpress.json"
         try:
             os.remove(file_path)
             print(f"Файл '{file_path}' успешно удален.")
@@ -641,7 +910,7 @@ def get_products_links_Aliexpress(item_name, user_id):
         print('-----------------------------')
 
 
-def get_products_links_Joom(item_name, user_id):
+def get_products_links_Joom(item_name, user_ip):
     driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
@@ -671,7 +940,16 @@ def get_products_links_Joom(item_name, user_id):
                 print(f'Обработка: {count + 1}/{len(product_urls)}')
                 print('-------')
 
-                get_products_data_Joom(product_url, driver=driver, user_id=user_id)
+                # Отправляем статус
+                requests.post(
+                    'http://nodejs-api:3000/api/status',
+                    json={
+                        'ip': user_ip,
+                        'message': f'Ozon: Обработка {count + 1}/{len(product_urls)}'
+                    }
+                )
+
+                get_products_data_Joom(product_url, driver=driver, user_id=user_ip)
                 count += 1
             except Exception as e:
                 print(f'Ошибка обработки {product_url}: {str(e)}')
@@ -679,10 +957,26 @@ def get_products_links_Joom(item_name, user_id):
 
         print('----')
         print('Данные о товарах упакованы в json')
-        # отправка json результата на REST_API
+
+        print('Отправка json результата на REST_API')
+        try:
+            with open(f"json products data/{user_ip}-Joom.json", "r", encoding="utf-8") as f:
+                data = json.load(f)
+                response = requests.post(
+                    'http://nodejs-api:3000/api/data',
+                    json={
+                        'ip': user_ip,
+                        'marketplace': 'Ozon',
+                        'data': data
+                    }
+                )
+                print(f"Ответ от API: {response.status_code}")
+        except Exception as e:
+            print(f"Ошибка при отправке данных в API: {e}")
+
 
         # удаление json-файла на сервере
-        file_path = f"json products data/{user_id}-Joom.json"
+        file_path = f"json products data/{user_ip}-Joom.json"
         try:
             os.remove(file_path)
             print(f"Файл '{file_path}' успешно удален.")
@@ -700,7 +994,7 @@ def get_products_links_Joom(item_name, user_id):
         print('-----------------------------')
 
 
-def get_products_links_Shop_mts(item_name, user_id):
+def get_products_links_Shop_mts(item_name, user_ip):
     driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
@@ -730,7 +1024,16 @@ def get_products_links_Shop_mts(item_name, user_id):
                 print(f'Обработка: {count + 1}/{len(product_urls)}')
                 print('-------')
 
-                get_products_data_Shop_mts(product_url, driver=driver, user_id=user_id)
+                # Отправляем статус
+                requests.post(
+                    'http://nodejs-api:3000/api/status',
+                    json={
+                        'ip': user_ip,
+                        'message': f'Ozon: Обработка {count + 1}/{len(product_urls)}'
+                    }
+                )
+
+                get_products_data_Shop_mts(product_url, driver=driver, user_id=user_ip)
                 count += 1
             except Exception as e:
                 print(f'Ошибка обработки {product_url}: {str(e)}')
@@ -738,10 +1041,25 @@ def get_products_links_Shop_mts(item_name, user_id):
 
         print('----')
         print('Данные о товарах упакованы в json')
-        # отправка json результата на REST_API
+
+        print('Отправка json результата на REST_API')
+        try:
+            with open(f"json products data/{user_ip}-Shop_mts.json", "r", encoding="utf-8") as f:
+                data = json.load(f)
+                response = requests.post(
+                    'http://nodejs-api:3000/api/data',
+                    json={
+                        'ip': user_ip,
+                        'marketplace': 'Ozon',
+                        'data': data
+                    }
+                )
+                print(f"Ответ от API: {response.status_code}")
+        except Exception as e:
+            print(f"Ошибка при отправке данных в API: {e}")
 
         # удаление json-файла на сервере
-        file_path = f"json products data/{user_id}-Shop_mts.json"
+        file_path = f"json products data/{user_ip}-Shop_mts.json"
         try:
             os.remove(file_path)
             print(f"Файл '{file_path}' успешно удален.")
@@ -759,7 +1077,7 @@ def get_products_links_Shop_mts(item_name, user_id):
         print('-----------------------------')
 
 
-def get_products_links_Technopark(item_name, user_id):
+def get_products_links_Technopark(item_name, user_ip):
     driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
@@ -789,7 +1107,16 @@ def get_products_links_Technopark(item_name, user_id):
                 print(f'Обработка: {count + 1}/{len(product_urls)}')
                 print('-------')
 
-                get_products_data_Technopark(product_url, driver=driver, user_id=user_id)
+                # Отправляем статус
+                requests.post(
+                    'http://nodejs-api:3000/api/status',
+                    json={
+                        'ip': user_ip,
+                        'message': f'Ozon: Обработка {count + 1}/{len(product_urls)}'
+                    }
+                )
+
+                get_products_data_Technopark(product_url, driver=driver, user_id=user_ip)
                 count += 1
             except Exception as e:
                 print(f'Ошибка обработки {product_url}: {str(e)}')
@@ -797,10 +1124,25 @@ def get_products_links_Technopark(item_name, user_id):
 
         print('----')
         print('Данные о товарах упакованы в json')
-        # отправка json результата на REST_API
+
+        print('Отправка json результата на REST_API')
+        try:
+            with open(f"json products data/{user_ip}-Technopark.json", "r", encoding="utf-8") as f:
+                data = json.load(f)
+                response = requests.post(
+                    'http://nodejs-api:3000/api/data',
+                    json={
+                        'ip': user_ip,
+                        'marketplace': 'Ozon',
+                        'data': data
+                    }
+                )
+                print(f"Ответ от API: {response.status_code}")
+        except Exception as e:
+            print(f"Ошибка при отправке данных в API: {e}")
 
         # удаление json-файла на сервере
-        file_path = f"json products data/{user_id}-Technopark.json"
+        file_path = f"json products data/{user_ip}-Technopark.json"
         try:
             os.remove(file_path)
             print(f"Файл '{file_path}' успешно удален.")
@@ -818,7 +1160,7 @@ def get_products_links_Technopark(item_name, user_id):
         print('-----------------------------')
 
 
-def get_products_links_Lamoda(item_name, user_id):
+def get_products_links_Lamoda(item_name, user_ip):
     driver = uc.Chrome(version_main=135)
     driver.implicitly_wait(10)
 
@@ -848,7 +1190,16 @@ def get_products_links_Lamoda(item_name, user_id):
                 print(f'Обработка: {count + 1}/{len(product_urls)}')
                 print('-------')
 
-                get_products_data_Lamoda(product_url, driver=driver, user_id=user_id)
+                # Отправляем статус
+                requests.post(
+                    'http://nodejs-api:3000/api/status',
+                    json={
+                        'ip': user_ip,
+                        'message': f'Ozon: Обработка {count + 1}/{len(product_urls)}'
+                    }
+                )
+
+                get_products_data_Lamoda(product_url, driver=driver, user_id=user_ip)
                 count += 1
             except Exception as e:
                 print(f'Ошибка обработки {product_url}: {str(e)}')
@@ -856,10 +1207,25 @@ def get_products_links_Lamoda(item_name, user_id):
 
         print('----')
         print('Данные о товарах упакованы в json')
-        # отправка json результата на REST_API
+
+        print('Отправка json результата на REST_API')
+        try:
+            with open(f"json products data/{user_ip}-Lamoda.json", "r", encoding="utf-8") as f:
+                data = json.load(f)
+                response = requests.post(
+                    'http://nodejs-api:3000/api/data',
+                    json={
+                        'ip': user_ip,
+                        'marketplace': 'Ozon',
+                        'data': data
+                    }
+                )
+                print(f"Ответ от API: {response.status_code}")
+        except Exception as e:
+            print(f"Ошибка при отправке данных в API: {e}")
 
         # удаление json-файла на сервере
-        file_path = f"json products data/{user_id}-Lamoda.json"
+        file_path = f"json products data/{user_ip}-Lamoda.json"
         try:
             os.remove(file_path)
             print(f"Файл '{file_path}' успешно удален.")
@@ -877,22 +1243,25 @@ def get_products_links_Lamoda(item_name, user_id):
         print('-----------------------------')
 
 
-def main():
-    #get_products_links_html_Ozon('наушники xiaomi', user_id='12331224') # 16.86 time.sleep(7) | 13.01 time.sleep(3) | 7.40 query optimization
-    #get_products_links_WB('наушники xiaomi', user_id='12331224') # 14.31 time.sleep(5) | 13.10 time.sleep(3) | 9.13 query optimization
-    #get_products_links_YandexMarket('наушники xiaomi', user_id='12331224') # 19.83 time.sleep(4) | 18.38 time.sleep(3) | 13.15 query optimization
-    #get_products_links_MagnitMarket('наушники xiaomi', user_id='12331224')  #35.72 time.sleep(3) | 18.47 time.sleep(3) | 30.49 query optimization
-    #get_products_links_DNS('наушники xiaomi', user_id='12331224') # 42.17 time.sleep(3) | 53.38 time.sleep(3)
-    #get_products_links_Citilink('наушники xiaomi', user_id='12331224') # 19.88 time.sleep(3) | 16.72 time.sleep(3) | 9.55 query optimization
-    #get_products_links_M_Video('наушники xiaomi', user_id='12331224') # 14.69 time.sleep(3) | 14.53 time.sleep(3) | 9.62 query optimization
-    #get_products_links_Avito('наушники xiaomi', user_id='12331224') # 95.88 time.sleep(3) | 96.14 time.sleep(3)
-    #get_products_links_Youla('наушники xiaomi', user_id='12331224') # 20.92 time.sleep(3) | 17.54 time.sleep(3)
-    #get_products_links_Aliexpress('наушники xiaomi', user_id='12331224') # 23.63 time.sleep(7) | 19.37 time.sleep(3) | 19.95 query optimization
-    #get_products_links_Joom('наушники xiaomi', user_id='12331224') # 18.28 time.sleep(7) | 15.63 time.sleep(3) | 9.49 query optimization
-    #get_products_links_Shop_mts('наушники xiaomi', user_id='12331224') # 30.15 time.sleep(7) | 28.37 time.sleep(3) | 12.60 query optimization
-    #get_products_links_Technopark('наушники xiaomi', user_id='12331224') # 40.60 time.sleep(7) | 38.19 time.sleep(3) | 31.43 query optimization
-    get_products_links_Lamoda('кроссовки nike', user_id='12331224') # 21.49 time.sleep(7) | 16.93 time.sleep(3) | 32.77 query optimization
-
-
 if __name__ == '__main__':
-    main()
+    app.run(host='0.0.0.0', port=5000)
+
+# def main():
+#     get_products_links_html_Ozon('наушники xiaomi', user_id='12331224') # 16.86 time.sleep(7) | 13.01 time.sleep(3) | 7.40 query optimization
+#     get_products_links_WB('наушники xiaomi', user_id='12331224') # 14.31 time.sleep(5) | 13.10 time.sleep(3) | 9.13 query optimization
+#     get_products_links_YandexMarket('наушники xiaomi', user_id='12331224') # 19.83 time.sleep(4) | 18.38 time.sleep(3) | 13.15 query optimization
+#     get_products_links_MagnitMarket('наушники xiaomi', user_id='12331224')  #35.72 time.sleep(3) | 18.47 time.sleep(3) | 30.49 query optimization
+#     get_products_links_DNS('наушники xiaomi', user_id='12331224') # 42.17 time.sleep(3) | 53.38 time.sleep(3)
+#     get_products_links_Citilink('наушники xiaomi', user_id='12331224') # 19.88 time.sleep(3) | 16.72 time.sleep(3) | 9.55 query optimization
+#     get_products_links_M_Video('наушники xiaomi', user_id='12331224') # 14.69 time.sleep(3) | 14.53 time.sleep(3) | 9.62 query optimization
+#     #get_products_links_Avito('наушники xiaomi', user_id='12331224') # 95.88 time.sleep(3) | 96.14 time.sleep(3)
+#     #get_products_links_Youla('наушники xiaomi', user_id='12331224') # 20.92 time.sleep(3) | 17.54 time.sleep(3)
+#     get_products_links_Aliexpress('наушники xiaomi', user_id='12331224') # 23.63 time.sleep(7) | 19.37 time.sleep(3) | 19.95 query optimization
+#     get_products_links_Joom('наушники xiaomi', user_id='12331224') # 18.28 time.sleep(7) | 15.63 time.sleep(3) | 9.49 query optimization
+#     get_products_links_Shop_mts('наушники xiaomi', user_id='12331224') # 30.15 time.sleep(7) | 28.37 time.sleep(3) | 12.60 query optimization
+#     get_products_links_Technopark('наушники xiaomi', user_id='12331224') # 40.60 time.sleep(7) | 38.19 time.sleep(3) | 31.43 query optimization
+#     get_products_links_Lamoda('кроссовки nike', user_id='12331224') # 21.49 time.sleep(7) | 16.93 time.sleep(3) | 32.77 query optimization
+#
+#
+# if __name__ == '__main__':
+#     main()
