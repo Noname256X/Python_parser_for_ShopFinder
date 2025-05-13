@@ -1418,6 +1418,7 @@ def get_products_data_Lamoda(link_products, driver, user_id):
             return 0, 0
 
 
+
     def get_product_images(driver):
         try:
             WebDriverWait(driver, 10).until(
