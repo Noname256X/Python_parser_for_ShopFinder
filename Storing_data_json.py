@@ -190,12 +190,6 @@ def Storing_data_M_Video(link_products, article, title, price, rating, reviews, 
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 
-# def Storing_data_Avito(link_products, article, title, price, rating, reviews, image_urls, user_id):
-#
-#
-# def Storing_data_Youla(link_products, article, title, price, rating, reviews, image_urls, user_id):
-
-
 def Storing_data_Aliexpress(link_products, title, price, rating, reviews, image_urls, user_ip):
     product_data = {
         "link_products": link_products,

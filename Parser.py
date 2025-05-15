@@ -16,6 +16,7 @@ from Storing_data_json import *
 import random
 
 
+
 def get_products_data_Ozon(link_products, driver, user_ip):
     print(f'Ссылка на товар:{link_products}')
 
@@ -864,14 +865,6 @@ def get_products_data_M_Video(link_products, driver, user_ip):
         print(f'Этот товар не будет добавлен в json-файл')
 
     print('-----------------------------')
-
-
-# def get_products_data_Avito(link_products, driver, user_id):
-#     print(f'Ссылка на товар:{link_products}')
-
-
-# def get_products_data_Youla(link_products, driver, user_id):
-#     print(f'Ссылка на товар:{link_products}')
 
 
 def get_products_data_Aliexpress(link_products, driver, user_ip):
