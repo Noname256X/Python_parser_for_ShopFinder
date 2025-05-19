@@ -264,6 +264,7 @@ def get_products_data_WB(link_products, driver, user_ip):
     image_urls = get_product_images(driver, article.group(1))
 
     if article and title and price != None:
+        price = f"{price} ₽"
         print(f'Артикул: {article.group(1)}')
         print(f'Заголовок товара: {title}')
         print(f'Цена товара: {price}')
@@ -378,6 +379,7 @@ def get_products_data_YandexMarket(link_products, driver, user_ip):
     image_urls = get_product_images(driver)
 
     if article and title and price != None:
+        price = f"{price} ₽"
         print(f'Артикул: {article}')
         print(f'Заголовок товара: {title}')
         print(f'Цена товара: {price}')
@@ -489,6 +491,7 @@ def get_products_data_MagnitMarket(link_products, driver, user_ip):
     image_urls = get_product_images(driver)
 
     if title and price != None:
+        price = f"{price} ₽"
         print(f'Заголовок товара: {title}')
         print(f'Цена товара: {price}')
         print(f'Рейтинг: {rating}')
@@ -605,6 +608,7 @@ def get_products_data_DNS(link_products, driver, user_ip):
     image_urls = get_product_images(driver)
 
     if title and price != None:
+        price = f"{price} ₽"
         print(f'Заголовок товара: {title}')
         print(f'Цена товара: {price}')
         print(f'Рейтинг: {rating}')
@@ -724,6 +728,7 @@ def get_products_data_Citilink(link_products, driver, user_ip):
     image_urls = get_product_images(driver)
 
     if article and title and price != None:
+        price = f"{price} ₽"
         print(f'Артикул: {article}')
         print(f'Заголовок товара: {title}')
         print(f'Цена товара: {price}')
@@ -850,6 +855,7 @@ def get_products_data_M_Video(link_products, driver, user_ip):
     image_urls = get_product_images(driver)
 
     if article and title and price != None:
+        price = f"{price} ₽"
         print(f'Артикул: {article}')
         print(f'Заголовок товара: {title}')
         print(f'Цена товара: {price}')
@@ -1196,6 +1202,7 @@ def get_products_data_Shop_mts(link_products, driver, user_ip):
         print(f'Этот товар не будет добавлен: {price}')
     else:
         if article and title and price != None:
+            price = f"{price} ₽"
             print(f'Артикул: {article}')
             print(f'Заголовок товара: {title}')
             print(f'Цена товара: {price}')
@@ -1243,15 +1250,18 @@ def get_products_data_Technopark(link_products, driver, user_ip):
             print(f"Не удалось найти название товара: {str(e)}")
             return None
 
-
     def get_product_price(driver):
         try:
             price_element = WebDriverWait(driver, 10).until(
                 EC.visibility_of_element_located(
-                    (By.XPATH, '//div[contains(@class, "product-page-purchase")]//div[contains(@class, "product-prices-new__values")]'))
+                    (By.XPATH,
+                     '//div[contains(@class, "product-prices-new")]/div[contains(@class, "product-prices-new__values") and not(contains(@class, "product-prices-new__old-price"))]')
+                )
             )
 
-            return price_element.text.strip().replace('\xa0', ' ').replace(' ₽', '')
+            price_text = price_element.text.strip().replace('\xa0', ' ').replace(' ₽', '')
+
+            return price_text.split()[0] + ' ' + price_text.split()[1]
 
         except Exception as e:
             print(f"Ошибка при получении цены: {str(e)}")
@@ -1283,24 +1293,16 @@ def get_products_data_Technopark(link_products, driver, user_ip):
 
     def get_product_images(driver):
         try:
-            thumbnails = WebDriverWait(driver, 20).until(
-                EC.presence_of_all_elements_located(
-                (By.CSS_SELECTOR, "div.product-page-gallery-thumbnails__thumbnail")
-            ))
+            controls_container = driver.find_element(By.CLASS_NAME, "product-page-gallery__controls")
 
-            image_urls = []
-            for thumbnail in thumbnails:
-                img = thumbnail.find_element(By.TAG_NAME, "img")
-                image_url = img.get_attribute("src")
-                if image_url not in image_urls:
-                    image_urls.append(image_url)
+            click_area = controls_container.find_elements(By.TAG_NAME, "div")[1]
 
-            image_urls_filtered = []
-            for item in image_urls:
-                if item is not None:
-                    image_urls_filtered.append(item)
+            click_area.click()
 
-            return image_urls_filtered
+            images = driver.find_elements(By.XPATH, "//img[contains(@src, 'photos_resized/product/1000_1000')]")
+
+            return [image.get_attribute("src") for image in images]
+
 
         except Exception as e:
             print(f"Ошибка при получении изображений: {str(e)}")
@@ -1314,6 +1316,7 @@ def get_products_data_Technopark(link_products, driver, user_ip):
     image_urls = get_product_images(driver)
 
     if article and title and price != None:
+        price = f"{price} ₽"
         print(f'Артикул: {article}')
         print(f'Заголовок товара: {title}')
         print(f'Цена товара: {price}')
@@ -1444,6 +1447,7 @@ def get_products_data_Lamoda(link_products, driver, user_ip):
     image_urls = get_product_images(driver)
 
     if article and title and price != None:
+        price = f"{price} ₽"
         print(f'Артикул: {article}')
         print(f'Заголовок товара: {title}')
         print(f'Цена товара: {price}')

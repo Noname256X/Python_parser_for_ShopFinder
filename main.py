@@ -27,7 +27,6 @@ CORS(app)
 
 @app.route('/status')
 def status():
-    # Логику проверки занятости сервера
     return jsonify({"status": "ready"})
 
 @app.route('/parse', methods=['POST'])
@@ -50,42 +49,45 @@ def run_parsing(query, marketplace, ip):
         )
 
     try:
+        page_number = request.json.get('pageNumber', 8)
+        print(f"Количесто товаров:{page_number}")
+
         if marketplace == 'Ozon':
             send_status(f"Ozon: Начало парсинга для '{query}'")
-            get_products_links_html_Ozon(query, ip)
+            get_products_links_html_Ozon(query, ip, page_number)
         elif marketplace == 'Wildberries':
             send_status(f"Wildberries: Начало парсинга для '{query}'")
-            get_products_links_WB(query, ip)
+            get_products_links_WB(query, ip, page_number)
         elif marketplace == 'YandexMarket':
             send_status(f"YandexMarket: Начало парсинга для '{query}'")
-            get_products_links_YandexMarket(query, ip)
+            get_products_links_YandexMarket(query, ip, page_number)
         elif marketplace == 'MagnitMarket':
             send_status(f"MagnitMarket: Начало парсинга для '{query}'")
-            get_products_links_MagnitMarket(query, ip)
+            get_products_links_MagnitMarket(query, ip, page_number)
         elif marketplace == 'DNS':
             send_status(f"DNS: Начало парсинга для '{query}'")
-            get_products_links_DNS(query, ip)
+            get_products_links_DNS(query, ip, page_number)
         elif marketplace == 'Citilink':
             send_status(f"Citilink: Начало парсинга для '{query}'")
-            get_products_links_Citilink(query, ip)
+            get_products_links_Citilink(query, ip, page_number)
         elif marketplace == 'M_Video':
             send_status(f"M_Video: Начало парсинга для '{query}'")
-            get_products_links_M_Video(query, ip)
+            get_products_links_M_Video(query, ip, page_number)
         elif marketplace == 'Aliexpress':
             send_status(f"Aliexpress: Начало парсинга для '{query}'")
-            get_products_links_Aliexpress(query, ip)
+            get_products_links_Aliexpress(query, ip, page_number)
         elif marketplace == 'Joom':
             send_status(f"Joom: Начало парсинга для '{query}'")
-            get_products_links_Joom(query, ip)
+            get_products_links_Joom(query, ip, page_number)
         elif marketplace == 'Shop_mts':
             send_status(f"Shop_mts: Начало парсинга для '{query}'")
-            get_products_links_Shop_mts(query, ip)
+            get_products_links_Shop_mts(query, ip, page_number)
         elif marketplace == 'Technopark':
             send_status(f"Technopark: Начало парсинга для '{query}'")
-            get_products_links_Technopark(query, ip)
+            get_products_links_Technopark(query, ip, page_number)
         elif marketplace == 'Lamoda':
             send_status(f"Lamoda: Начало парсинга для '{query}'")
-            get_products_links_Lamoda(query, ip)
+            get_products_links_Lamoda(query, ip, page_number)
 
         send_status(f"{marketplace}: Парсинг завершен")
 
@@ -112,7 +114,7 @@ def driver_init(user_ip, marketplace):
         return None
 
 
-def get_products_links_html_Ozon(item_name, user_ip):
+def get_products_links_html_Ozon(item_name, user_ip, page_number=8):
     driver = driver_init(user_ip, 'Ozon')
     if not driver:
         print("[ERROR] Не удалось инициализировать драйвер")
@@ -126,6 +128,8 @@ def get_products_links_html_Ozon(item_name, user_ip):
         try:
             find_links = driver.find_elements(By.CSS_SELECTOR, 'div.tile-root a.tile-clickable-element')
             product_urls = {link.get_attribute("href") for link in find_links if link.get_attribute("href") is not None}
+
+            product_urls = list(product_urls)[:page_number]
 
         except Exception as e:
             print(f'[!] Что-то пошло не так при сборе ссылок на товары Ozon: {e}')
@@ -198,7 +202,7 @@ def get_products_links_html_Ozon(item_name, user_ip):
         print('-----------------------------')
 
 
-def get_products_links_WB(item_name, user_ip):
+def get_products_links_WB(item_name, user_ip, page_number=8):
     driver = driver_init(user_ip, 'Wildberries')
     if not driver:
         print("[ERROR] Не удалось инициализировать драйвер")
@@ -212,6 +216,8 @@ def get_products_links_WB(item_name, user_ip):
         try:
             find_links = driver.find_elements(By.CSS_SELECTOR, 'a.product-card__link')
             product_urls = {link.get_attribute("href") for link in find_links if link.get_attribute("href") is not None}
+
+            product_urls = list(product_urls)[:page_number]
 
         except Exception as e:
             print(f'[!] Что-то пошло не так при сборе ссылок на товары WB: {e}')
@@ -283,7 +289,7 @@ def get_products_links_WB(item_name, user_ip):
         print('-----------------------------')
 
 
-def get_products_links_YandexMarket(item_name, user_ip):
+def get_products_links_YandexMarket(item_name, user_ip, page_number=8):
     driver = driver_init(user_ip, 'YandexMarket')
     if not driver:
         print("[ERROR] Не удалось инициализировать драйвер")
@@ -302,6 +308,8 @@ def get_products_links_YandexMarket(item_name, user_ip):
                 link.get_attribute("href") for link in find_links
                 if link.get_attribute("href") is not None and "/product--" in link.get_attribute("href")
             }
+
+            product_urls = list(product_urls)[:page_number]
 
         except Exception as e:
             print(f'[!] Что-то пошло не так при сборе ссылок на товары Я.Маркет: {e}')
@@ -372,7 +380,7 @@ def get_products_links_YandexMarket(item_name, user_ip):
         print('-----------------------------')
 
 
-def get_products_links_MagnitMarket(item_name, user_ip):
+def get_products_links_MagnitMarket(item_name, user_ip, page_number=8):
     driver = driver_init(user_ip, 'MagnitMarket')
     if not driver:
         print("[ERROR] Не удалось инициализировать драйвер")
@@ -386,6 +394,8 @@ def get_products_links_MagnitMarket(item_name, user_ip):
         try:
             find_links = driver.find_elements(By.CSS_SELECTOR, 'div[data-test-id="item__product-card"] a[ui-link="ui-link"]')
             product_urls = {link.get_attribute("href") for link in find_links if link.get_attribute("href") is not None}
+
+            product_urls = list(product_urls)[:page_number]
 
         except Exception as e:
             print(f'[!] Что-то пошло не так при сборе ссылок на товары М.Маркет: {e}')
@@ -457,7 +467,7 @@ def get_products_links_MagnitMarket(item_name, user_ip):
         print('-----------------------------')
 
 
-def get_products_links_DNS(item_name, user_ip):
+def get_products_links_DNS(item_name, user_ip, page_number=8):
     driver = driver_init(user_ip, 'DNS')
     if not driver:
         print("[ERROR] Не удалось инициализировать драйвер")
@@ -475,10 +485,10 @@ def get_products_links_DNS(item_name, user_ip):
         time.sleep(2)
 
         try:
-            find_links = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, 'a.catalog-product__name'))
-            )
+            find_links = driver.find_elements(By.CSS_SELECTOR, 'a.catalog-product__name')
             product_urls = [link.get_attribute("href") for link in find_links if link.get_attribute("href") is not None]
+
+            product_urls = list(product_urls)[:page_number]
 
         except Exception as e:
             print(f'[!] Что-то пошло не так при сборе ссылок на товары DNS: {e}')
@@ -548,7 +558,7 @@ def get_products_links_DNS(item_name, user_ip):
         print('-----------------------------')
 
 
-def get_products_links_Citilink(item_name, user_ip): # Дописать парсинг картинок
+def get_products_links_Citilink(item_name, user_ip, page_number=8): # Дописать парсинг картинок
     driver = driver_init(user_ip, 'Citilink')
     if not driver:
         print("[ERROR] Не удалось инициализировать драйвер")
@@ -562,6 +572,8 @@ def get_products_links_Citilink(item_name, user_ip): # Дописать парс
         try:
             find_links = driver.find_elements(By.CSS_SELECTOR, 'a.app-catalog-51bw0j-Anchor--Anchor-Anchor--StyledAnchor')
             product_urls = [link.get_attribute("href") for link in find_links if link.get_attribute("href") is not None]
+
+            product_urls = list(product_urls)[:page_number]
 
         except Exception as e:
             print(f'[!] Что-то пошло не так при сборе ссылок на товары Citilink: {e}')
@@ -630,7 +642,7 @@ def get_products_links_Citilink(item_name, user_ip): # Дописать парс
         print('-----------------------------')
 
 
-def get_products_links_M_Video(item_name, user_ip): # Доработать (Пропадают цены время от времени)
+def get_products_links_M_Video(item_name, user_ip, page_number=8): # Доработать (Пропадают цены время от времени)
     driver = driver_init(user_ip, 'M_Video')
     if not driver:
         print("[ERROR] Не удалось инициализировать драйвер")
@@ -644,6 +656,8 @@ def get_products_links_M_Video(item_name, user_ip): # Доработать (Пр
         try:
             find_links = driver.find_elements(By.CSS_SELECTOR, 'a.product-title__text')
             product_urls = [link.get_attribute("href") for link in find_links if link.get_attribute("href") is not None]
+
+            product_urls = list(product_urls)[:page_number]
 
         except Exception as e:
             print(f'[!] Что-то пошло не так при сборе ссылок на товары M.Video: {e}')
@@ -712,7 +726,7 @@ def get_products_links_M_Video(item_name, user_ip): # Доработать (Пр
         print('-----------------------------')
 
 
-def get_products_links_Aliexpress(item_name, user_ip):
+def get_products_links_Aliexpress(item_name, user_ip, page_number=8):
     driver = driver_init(user_ip, 'Aliexpress')
     if not driver:
         print("[ERROR] Не удалось инициализировать драйвер")
@@ -726,6 +740,8 @@ def get_products_links_Aliexpress(item_name, user_ip):
         try:
             find_links = driver.find_elements(By.CSS_SELECTOR, 'a.red-snippet_RedSnippet__gallery__e15tmk')
             product_urls = [link.get_attribute("href") for link in find_links if link.get_attribute("href") is not None]
+
+            product_urls = list(product_urls)[:page_number]
 
         except Exception as e:
             print(f'[!] Что-то пошло не так при сборе ссылок на товары Aliexpress: {e}')
@@ -795,7 +811,7 @@ def get_products_links_Aliexpress(item_name, user_ip):
         print('-----------------------------')
 
 
-def get_products_links_Joom(item_name, user_ip):
+def get_products_links_Joom(item_name, user_ip, page_number=8):
     driver = driver_init(user_ip, 'Joom')
     if not driver:
         print("[ERROR] Не удалось инициализировать драйвер")
@@ -809,6 +825,8 @@ def get_products_links_Joom(item_name, user_ip):
         try:
             find_links = driver.find_elements(By.CSS_SELECTOR, 'a.content___N4xbX')
             product_urls = [link.get_attribute("href") for link in find_links if link.get_attribute("href") is not None]
+
+            product_urls = list(product_urls)[:page_number]
 
         except Exception as e:
             print(f'[!] Что-то пошло не так при сборе ссылок на товары Joom: {e}')
@@ -879,7 +897,7 @@ def get_products_links_Joom(item_name, user_ip):
         print('-----------------------------')
 
 
-def get_products_links_Shop_mts(item_name, user_ip):
+def get_products_links_Shop_mts(item_name, user_ip, page_number=8):
     driver = driver_init(user_ip, 'Shop_mts')
     if not driver:
         print("[ERROR] Не удалось инициализировать драйвер")
@@ -893,6 +911,8 @@ def get_products_links_Shop_mts(item_name, user_ip):
         try:
             find_links = driver.find_elements(By.CSS_SELECTOR, 'a.product-card__gallery-wrap')
             product_urls = {link.get_attribute("href") for link in find_links if link.get_attribute("href") is not None}
+
+            product_urls = list(product_urls)[:page_number]
 
         except Exception as e:
             print(f'[!] Что-то пошло не так при сборе ссылок на товары Shop.mts: {e}')
@@ -962,7 +982,7 @@ def get_products_links_Shop_mts(item_name, user_ip):
         print('-----------------------------')
 
 
-def get_products_links_Technopark(item_name, user_ip):
+def get_products_links_Technopark(item_name, user_ip, page_number=8):
     driver = driver_init(user_ip, 'Technopark')
     if not driver:
         print("[ERROR] Не удалось инициализировать драйвер")
@@ -976,6 +996,8 @@ def get_products_links_Technopark(item_name, user_ip):
         try:
             find_links = driver.find_elements(By.CSS_SELECTOR, 'a.product-card-link.product-card-big__image-wrapper')
             product_urls = {link.get_attribute("href") for link in find_links if link.get_attribute("href") is not None}
+
+            product_urls = list(product_urls)[:page_number]
 
         except Exception as e:
             print(f'[!] Что-то пошло не так при сборе ссылок на товары Technopark: {e}')
@@ -1045,7 +1067,7 @@ def get_products_links_Technopark(item_name, user_ip):
         print('-----------------------------')
 
 
-def get_products_links_Lamoda(item_name, user_ip):
+def get_products_links_Lamoda(item_name, user_ip, page_number=8):
     driver = driver_init(user_ip, 'Lamoda')
     if not driver:
         print("[ERROR] Не удалось инициализировать драйвер")
@@ -1059,6 +1081,8 @@ def get_products_links_Lamoda(item_name, user_ip):
         try:
             find_links = driver.find_elements(By.CSS_SELECTOR, 'a._root_aroml_2.x-product-card__pic')
             product_urls = {link.get_attribute("href") for link in find_links if link.get_attribute("href") is not None}
+
+            product_urls = list(product_urls)[:page_number]
 
         except Exception as e:
             print(f'[!] Что-то пошло не так при сборе ссылок на товары Lamoda: {e}')
@@ -1132,20 +1156,18 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
 
 # def main():
-    #get_products_links_html_Ozon('наушники xiaomi', user_ip='12331224') # 16.86 time.sleep(7) | 13.01 time.sleep(3) | 7.40 query optimization
-    # get_products_links_WB('наушники xiaomi', user_id='12331224') # 14.31 time.sleep(5) | 13.10 time.sleep(3) | 9.13 query optimization
-    # get_products_links_YandexMarket('наушники xiaomi', user_id='12331224') # 19.83 time.sleep(4) | 18.38 time.sleep(3) | 13.15 query optimization
-    # get_products_links_MagnitMarket('наушники xiaomi', user_id='12331224')  #35.72 time.sleep(3) | 18.47 time.sleep(3) | 30.49 query optimization
-    # get_products_links_DNS('наушники xiaomi', user_id='12331224') # 42.17 time.sleep(3) | 53.38 time.sleep(3)
-    # get_products_links_Citilink('наушники xiaomi', user_id='12331224') # 19.88 time.sleep(3) | 16.72 time.sleep(3) | 9.55 query optimization
-    # get_products_links_M_Video('наушники xiaomi', user_id='12331224') # 14.69 time.sleep(3) | 14.53 time.sleep(3) | 9.62 query optimization
-    # #get_products_links_Avito('наушники xiaomi', user_id='12331224') # 95.88 time.sleep(3) | 96.14 time.sleep(3)
-    # #get_products_links_Youla('наушники xiaomi', user_id='12331224') # 20.92 time.sleep(3) | 17.54 time.sleep(3)
-    # get_products_links_Aliexpress('наушники xiaomi', user_id='12331224') # 23.63 time.sleep(7) | 19.37 time.sleep(3) | 19.95 query optimization
-    # get_products_links_Joom('наушники xiaomi', user_id='12331224') # 18.28 time.sleep(7) | 15.63 time.sleep(3) | 9.49 query optimization
-    # get_products_links_Shop_mts('наушники xiaomi', user_id='12331224') # 30.15 time.sleep(7) | 28.37 time.sleep(3) | 12.60 query optimization
-    # get_products_links_Technopark('наушники xiaomi', user_id='12331224') # 40.60 time.sleep(7) | 38.19 time.sleep(3) | 31.43 query optimization
-    # get_products_links_Lamoda('кроссовки nike', user_id='12331224') # 21.49 time.sleep(7) | 16.93 time.sleep(3) | 32.77 query optimization
+    # get_products_links_html_Ozon('наушники xiaomi', user_ip='12331224') # 16.86 time.sleep(7) | 13.01 time.sleep(3) | 7.40 query optimization
+    # get_products_links_WB('наушники xiaomi', user_ip='12331224') # 14.31 time.sleep(5) | 13.10 time.sleep(3) | 9.13 query optimization
+    # get_products_links_YandexMarket('наушники xiaomi', user_ip='12331224') # 19.83 time.sleep(4) | 18.38 time.sleep(3) | 13.15 query optimization
+    # get_products_links_MagnitMarket('наушники xiaomi', user_ip='12331224')  #35.72 time.sleep(3) | 18.47 time.sleep(3) | 30.49 query optimization
+    # get_products_links_DNS('наушники xiaomi', user_ip='12331224') # 42.17 time.sleep(3) | 53.38 time.sleep(3)
+    # get_products_links_Citilink('наушники xiaomi', user_ip='12331224') # 19.88 time.sleep(3) | 16.72 time.sleep(3) | 9.55 query optimization
+    # get_products_links_M_Video('наушники xiaomi', user_ip='12331224') # 14.69 time.sleep(3) | 14.53 time.sleep(3) | 9.62 query optimization
+    # get_products_links_Aliexpress('наушники xiaomi', user_ip='12331224') # 23.63 time.sleep(7) | 19.37 time.sleep(3) | 19.95 query optimization
+    #get_products_links_Joom('наушники xiaomi', user_ip='12331224') # 18.28 time.sleep(7) | 15.63 time.sleep(3) | 9.49 query optimization
+    # get_products_links_Shop_mts('наушники xiaomi', user_ip='12331224') # 30.15 time.sleep(7) | 28.37 time.sleep(3) | 12.60 query optimization
+    # get_products_links_Technopark('наушники xiaomi', user_ip='12331224') # 40.60 time.sleep(7) | 38.19 time.sleep(3) | 31.43 query optimization
+    # get_products_links_Lamoda('кроссовки nike', user_ip='12331224') # 21.49 time.sleep(7) | 16.93 time.sleep(3) | 32.77 query optimization
 
 
 # if __name__ == '__main__':
